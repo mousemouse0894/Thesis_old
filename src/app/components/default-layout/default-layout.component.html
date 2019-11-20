@@ -1,0 +1,162 @@
+<div class="default-layout">
+  <div class="dl-sidebar" [hidden]="stateScreen.sidebarShow == false">
+    <div
+      class="text-right"
+      style="padding:5px;"
+      [hidden]="stateScreen.displayMatch == true"
+    >
+      <button
+        type="button"
+        class="btn btn-link"
+        (click)="sidebarChange()"
+        style="text-decoration: none;"
+      >
+        ปิด&nbsp;&nbsp;<i class="fas fa-times fa-lg"></i>
+      </button>
+    </div>
+
+    <div class="text-center" style="padding:15px;background-color: #007BFF;">
+      <div class="text-center">
+        <img
+          src="./assets/RMUTi_LOGO.png"
+          alt="rmuti_logo"
+          width="70px;"
+          class="mb-2"
+        />
+        <h6 class="mb-1 text-white">
+          {{ localStorage.get("userlogin")["prename"]
+          }}{{ localStorage.get("userlogin")["fname"] }}&nbsp;{{
+            localStorage.get("userlogin")["lname"]
+          }}
+        </h6>
+        <h6
+          class="text-white"
+          *ngIf="localStorage.get('userlogin')['role'] == '4500'"
+        >
+          {{ localStorage.get("userlogin")["studentId"] }}
+        </h6>
+      </div>
+    </div>
+    <div *ngIf="localStorage">
+      <div
+        class="alert alert-danger"
+        role="alert"
+        *ngIf="localStorage.get('userlogin')['password'] == false"
+      >
+        โปรดเปลี่ยนรหัสผ่านของท่าน
+      </div>
+    </div>
+    <mat-nav-list>
+      <a
+        mat-list-item
+        href="javascript:void(0)"
+        *ngIf="localStorage.get('userlogin')['role'] == '4500'"
+        [routerLink]="['/student/group']"
+        [routerLinkActive]="['link-active']"
+        (click)="stateScreen.displayMatch == false ? sidebarChange() : ''"
+      >
+        <span style="display: inline-block;width: 30px;">
+          <i class="fas fa-users"></i>
+        </span>
+        กลุ่มเรียนของฉัน</a
+      >
+      <a
+        mat-list-item
+        href="javascript:void(0)"
+        *ngIf="localStorage.get('userlogin')['role'] == '4500'"
+        [routerLink]="['/student/test']"
+        [routerLinkActive]="['link-active']"
+        (click)="stateScreen.displayMatch == false ? sidebarChange() : ''"
+      >
+        <span style="display: inline-block;width: 30px;">
+          <i class="fas fa-sticky-note"></i>
+        </span>
+        การสอบ</a
+      >
+      <a
+        mat-list-item
+        href="javascript:void(0)"
+        *ngIf="localStorage.get('userlogin')['role'] == '4500'"
+        [routerLink]="['/student/history']"
+        [routerLinkActive]="['link-active']"
+        (click)="stateScreen.displayMatch == false ? sidebarChange() : ''"
+      >
+        <span style="display: inline-block;width: 30px;">
+          <i class="fas fa-history"></i>
+        </span>
+        ประวัติการสอบ</a
+      >
+      <a
+        mat-list-item
+        href="javascript:void(0)"
+        *ngIf="localStorage.get('userlogin')['role'] != '4500'"
+        [routerLink]="['/teacher/group']"
+        [routerLinkActive]="['link-active']"
+        (click)="stateScreen.displayMatch == false ? sidebarChange() : ''"
+      >
+        <span style="display: inline-block;width: 30px;">
+          <i class="fas fa-users"></i>
+        </span>
+        จัดการกลุ่มเรียน</a
+      >
+      <a
+        mat-list-item
+        href="javascript:void(0)"
+        *ngIf="localStorage.get('userlogin')['role'] != '4500'"
+        [routerLink]="['/teacher/store']"
+        [routerLinkActive]="['link-active']"
+        (click)="stateScreen.displayMatch == false ? sidebarChange() : ''"
+      >
+        <span style="display: inline-block;width: 30px;">
+          <i class="fas fa-database"></i>
+        </span>
+        จัดการคลังข้อสอบ</a
+      >
+      <a
+        mat-list-item
+        href="javascript:void(0)"
+        [routerLink]="['/changePassword']"
+        [routerLinkActive]="['link-active']"
+        (click)="stateScreen.displayMatch == false ? sidebarChange() : ''"
+      >
+        <span style="display: inline-block;width: 30px;">
+          <i class="fas fa-key"></i>
+        </span>
+        เปลี่ยนรหัสผ่าน
+      </a>
+      <a
+        mat-list-item
+        href="javascript:void(0)"
+        (click)="onLogout()"
+        style="color: #DC3545;"
+      >
+        <span style="display: inline-block;width: 30px;">
+          <i class="fas fa-sign-out-alt"></i> </span
+        >ออกจากระบบ
+      </a>
+    </mat-nav-list>
+  </div>
+  <div class="dl-content">
+    <div
+      class="dl-content-backdrop"
+      *ngIf="
+        stateScreen.sidebarShow == true && stateScreen.displayMatch == false
+      "
+      (click)="sidebarChange()"
+    ></div>
+    <mat-toolbar class="fixed-top">
+      <button type="button" mat-icon-button (click)="sidebarChange()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span *ngIf="stateScreen.displayMatch == true"
+        >&nbsp;&nbsp;ระบบตรวจสอบการเขียนคำสั่งเอสคิวแอล</span
+      >
+      <span *ngIf="stateScreen.displayMatch == false"
+        >&nbsp;&nbsp;SQL Checking</span
+      >
+    </mat-toolbar>
+    <div style="padding-top:45px;">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

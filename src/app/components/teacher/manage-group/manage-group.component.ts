@@ -1,0 +1,145 @@
+import { AppService } from "./../../../services/app.service";
+import { LocalstorageService } from "./../../../services/localstorage.service";
+import { HttpService } from "./../../../services/http.service";
+import { AlertService } from "./../../../services/alert.service";
+import { Component, OnInit } from "@angular/core";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+
+@Component({
+  selector: "app-manage-group",
+  templateUrl: "./manage-group.component.html",
+  styleUrls: ["./manage-group.component.scss"]
+})
+export class ManageGroupComponent implements OnInit {
+  public formGroup: FormGroup;
+  public groupresult: any = null;
+  public studentInGroup: any = null;
+  public p: number = 1;
+  public _windows: any = window;
+  public selectStudentgroup: any = null;
+  constructor(
+    private alert: AlertService,
+    private http: HttpService,
+    private formBuilder: FormBuilder,
+    public localStorage: LocalstorageService,
+    public service: AppService
+  ) {
+    this.selectGroup();
+  }
+
+  ngOnInit() {}
+
+  public deleteStudent = (username: String) => {
+    this.alert.confirmAlert("ยืนยันการลบ").then(async (value: any) => {
+      if (value) {
+        this.service.loadingState = true;
+        let httpResponse: any = await this.http.get(
+          "group/removestudent/" + username
+        );
+        if (httpResponse.connect) {
+          if (httpResponse.value.result == true) {
+            this.selectStudent(this.selectStudentgroup);
+            this.alert.alert("success", "ลบข้อมูลสำเร็จ");
+          } else {
+            this.alert.alert("error", httpResponse.value.message);
+          }
+        }
+      }
+      this.service.loadingState = false;
+    });
+  };
+
+  public openCreateGroup = () => {
+    this.formGroup = this.formBuilder.group({
+      name: ["", Validators.required],
+      owner: [this.localStorage.get("userlogin")["username"]],
+      password: ["", Validators.required],
+      status: ["เปิด", Validators.required]
+    });
+  };
+
+  public openEditGroup = (
+    name: string,
+    password: string,
+    status: string,
+    gId: number
+  ) => {
+    this.formGroup = this.formBuilder.group({
+      name: [name, Validators.required],
+      owner: [this.localStorage.get("userlogin")["username"]],
+      password: [password, Validators.required],
+      status: [status, Validators.required],
+      gId: [gId, Validators.required]
+    });
+  };
+
+  public submitCreateGroup = async () => {
+    console.log(this.formGroup.value);
+    this.service.loadingState = true;
+    let formData = new FormData();
+    Object.keys(this.formGroup.value).forEach(key => {
+      formData.append(`${key}`, this.formGroup.value[key]);
+      // console.log(`${key}`, this.formGroup.value[key]);
+    });
+    let httpResponse: any = await this.http.post("group/creategroup", formData);
+    if (httpResponse.connect) {
+      if (httpResponse.value.result == true) {
+        this.alert.alert("success", "เพื่มกลุ่มสำเร็จ");
+        this.selectGroup();
+        this._windows.$("#createGroup").modal("hide");
+      } else {
+        this.alert.alert("error", httpResponse.value.message);
+      }
+    }
+
+    this.service.loadingState = false;
+  };
+
+  public submitEditGroup = async () => {
+    this.service.loadingState = true;
+    let formData = new FormData();
+    Object.keys(this.formGroup.value).forEach(key => {
+      formData.append(`${key}`, this.formGroup.value[key]);
+      console.log(`${key}`, this.formGroup.value[key]);
+    });
+    let httpResponse: any = await this.http.post("group/groupupdate", formData);
+    if (httpResponse.connect) {
+      if (httpResponse.value.result == true) {
+        this.alert.alert("success", "เเก้ไข้สำเร็จ");
+        this.selectGroup();
+        this._windows.$("#editGroup").modal("hide");
+      } else {
+        this.alert.alert("error", httpResponse.value.message);
+      }
+    }
+
+    this.service.loadingState = false;
+  };
+
+  public selectGroup = async () => {
+    let httpResponse: any = await this.http.get(
+      "group/showgroup/" + this.localStorage.get("userlogin")["username"]
+    );
+    if (httpResponse.connect) {
+      if (httpResponse.value.result == true) {
+        this.groupresult = httpResponse.value.data.result;
+      } else {
+        this.alert.alert("error", httpResponse.value.message);
+      }
+    }
+  };
+
+  public selectStudent = async (data: string) => {
+    this.selectStudentgroup = data;
+    this.studentInGroup = null;
+    let httpResponse: any = await this.http.get("group/showstudent/" + data);
+    if (httpResponse.connect) {
+      if (httpResponse.value.result == true) {
+        this.studentInGroup = httpResponse.value.data.result;
+        console.log(this.studentInGroup);
+      } else {
+        this.alert.alert("error", httpResponse.value.message);
+      }
+    }
+  };
+}

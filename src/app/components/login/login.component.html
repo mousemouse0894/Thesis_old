@@ -1,0 +1,209 @@
+<div style="padding:15px;">
+  <div
+    class="row justify-content-center"
+    style="margin-top :20px;margin-bottom: 60px;"
+  >
+    <div class="col-xl-5 col-lg-6 col-md-8">
+      <div class="card" style="box-shadow: 0px 4px 8px 0 rgba(0, 0, 0, 0.2)">
+        <div class="card-body">
+          <form #formLogin="ngForm" (ngSubmit)="submitLogin(formLogin)">
+            <div class="text-center mb-2">
+              <img
+                src="./assets/RMUTi_LOGO.png"
+                alt="rmuti_logo"
+                width="60px;"
+              />
+            </div>
+            <div class="text-center mb-3">
+              <h5>
+                <b>ระบบตรวจสอบการเขียนคำสั่งเอสคิวแอล</b>
+              </h5>
+            </div>
+
+            <div class="row justify-content-center">
+              <div class="col-10 mb-3">
+                <div>
+                  <mat-form-field>
+                    <input
+                      matInput
+                      placeholder="ชื่อผู้ใช้งาน (Username)"
+                      name="username"
+                      type="text"
+                      required
+                      ngModel
+                    />
+                  </mat-form-field>
+                </div>
+                <div class="mb-3">
+                  <mat-form-field>
+                    <input
+                      matInput
+                      placeholder="รผัสผ่าน (Password)"
+                      name="password"
+                      type="password"
+                      required
+                      ngModel
+                    />
+                  </mat-form-field>
+                </div>
+                <div>
+                  <re-captcha
+                    #captchaRef
+                    *ngIf="showCapcha"
+                    (resolved)="captcha($event)"
+                    [siteKey]="captchaSitekey"
+                    class="text-center"
+                  ></re-captcha>
+                </div>
+              </div>
+            </div>
+
+            <div class="text-center">
+              <div class="mb-3">
+                <span style="margin: 0px 5px 0px 5px;">
+                  <button
+                    type="submit"
+                    class="btn btn-primary"
+                    [disabled]="formLogin.valid ? dataCaptcha == null : true"
+                  >
+                    เข้าสู่ระบบ
+                  </button>
+                </span>
+                <span style="margin: 0px 5px 0px 5px;">
+                  <button
+                    type="button"
+                    class="btn btn-link"
+                    data-toggle="modal"
+                    data-target="#modalForgetPassword"
+                  >
+                    ลืมรหัสผ่าน
+                  </button>
+                </span>
+              </div>
+
+              <div class="mb-3">
+                <h6>หรือ</h6>
+              </div>
+
+              <div class="mb-3">
+                <span style="margin: 0px 5px 0px 5px;">
+                  <button
+                    type="button"
+                    class="btn btn-warning"
+                    (click)="loginSSO()"
+                  >
+                    เข้าสู่ระบบด้วยบัญชีอินเตอร์เน็ต มทร.อีสาน
+                  </button>
+                </span>
+              </div>
+
+              <p class="text-danger" style="margin: unset;">
+                * หากเข้าใช้งานครั้งแรก โปรดเข้าสู่ระบบด้วยบัญชีอินเตอร์เน็ต
+                มทร.อีสาน
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<nav class="navbar navbar-light bg-light fixed-bottom bg-white">
+  <span
+    >&nbsp;&nbsp;Copyright © {{ getYear() }} สาขาวิชาวิศวกรรมคอมพิวเตอร์
+    มหาวิทยาลัยเทคโนโลยีราชมงคลอีสาน นครราชสีมา
+  </span>
+</nav>
+
+<!-- Modal ForgetPassword -->
+<div
+  class="modal fade"
+  id="modalForgetPassword"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modalForgetPasswordLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalForgetPasswordLabel">ลืมรหัสผ่าน</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form #forget="ngForm" (ngSubmit)="forgetpass(forget)">
+        <div class="modal-body">
+          <mat-form-field>
+            <input
+              matInput
+              placeholder="ชื่อผู้ใช้งาน (Username)"
+              name="username"
+              type="text"
+              required
+              ngModel
+              #username
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
+              placeholder="รผัสบัตรประชาชน (Personal ID)"
+              name="personalId"
+              type="text"
+              required
+              ngModel
+              #PersonalId
+            /> </mat-form-field
+          ><mat-form-field>
+            <input
+              matInput
+              placeholder="รผัสผ่าน (Password)"
+              name="password"
+              type="password"
+              required
+              ngModel
+              #password
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
+              placeholder="ยืนยันรผัสผ่าน (Password)"
+              name="password2"
+              type="password"
+              required
+              ngModel
+              #password2
+            />
+          </mat-form-field>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            ปิด
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            type="submit"
+            [disabled]="
+              username.value == '' ||
+              PersonalId == '' ||
+              password.value == '' ||
+              password2.value == ''
+                ? true
+                : false
+            "
+          >
+            ยืนยัน
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

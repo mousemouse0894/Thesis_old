@@ -1,0 +1,4 @@
+<router-outlet></router-outlet>
+
+<ngx-loading *ngIf="service" [show]="service.loadingState"></ngx-loading>
+<div [hidden]="'true'">{{ onLoadingShow(service.loadingState) }}</div>

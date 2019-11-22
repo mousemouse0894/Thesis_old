@@ -58,9 +58,75 @@
       <thead>
         <tr>
           <th></th>
-          <th>ชื่อกลุ่มเรียน</th>
+          <th
+            (click)="
+              groupOrder(
+                orderByGroup.key == 'gName'
+                  ? orderByGroup.order == 'asc'
+                    ? 'desc'
+                    : 'asc'
+                  : 'asc',
+                'gName'
+              )
+            "
+            style="cursor: pointer;"
+          >
+            ชื่อกลุ่มเรียน<span
+              style="display:inline-block; padding-left: 10px;"
+              [ngStyle]="{
+                color:
+                  orderByGroup.order == 'asc' && orderByGroup.key == 'gName'
+                    ? '#007bff'
+                    : '#b0b0b0'
+              }"
+              ><i class="fas fa-arrow-up fa-sm"></i
+            ></span>
+            <span
+              style="display:inline-block; padding-left: 3px;"
+              [ngStyle]="{
+                color:
+                  orderByGroup.order == 'desc' && orderByGroup.key == 'gName'
+                    ? '#007bff'
+                    : '#b0b0b0'
+              }"
+              ><i class="fas fa-arrow-down fa-sm"></i
+            ></span>
+          </th>
           <th>รหัสผ่านกลุ่มเรียน</th>
-          <th>สถานะกลุ่ม</th>
+          <th
+            (click)="
+              groupOrder(
+                orderByGroup.key == 'gStatus'
+                  ? orderByGroup.order == 'asc'
+                    ? 'desc'
+                    : 'asc'
+                  : 'asc',
+                'gStatus'
+              )
+            "
+            style="cursor: pointer;"
+          >
+            สถานะกลุ่ม<span
+              style="display:inline-block; padding-left: 10px;"
+              [ngStyle]="{
+                color:
+                  orderByGroup.order == 'asc' && orderByGroup.key == 'gStatus'
+                    ? '#007bff'
+                    : '#b0b0b0'
+              }"
+              ><i class="fas fa-arrow-up fa-sm"></i
+            ></span>
+            <span
+              style="display:inline-block; padding-left: 3px;"
+              [ngStyle]="{
+                color:
+                  orderByGroup.order == 'desc' && orderByGroup.key == 'gStatus'
+                    ? '#007bff'
+                    : '#b0b0b0'
+              }"
+              ><i class="fas fa-arrow-down fa-sm"></i
+            ></span>
+          </th>
           <th></th>
           <th></th>
         </tr>
@@ -74,11 +140,11 @@
           "
         >
           <th style="vertical-align: middle; min-width: 30px;">{{ i + 1 }}</th>
-          <td style="vertical-align: middle; min-width: 120px;">
+          <td style="vertical-align: middle; min-width: 140px;">
             {{ x.gName }}
           </td>
           <td style="vertical-align: middle; min-width: 150px;">{{ x.gPw }}</td>
-          <td style="vertical-align: middle; min-width: 100px;">
+          <td style="vertical-align: middle; min-width: 120px;">
             {{ x.gStatus }}
           </td>
           <td style="vertical-align: middle; min-width: 120px;">
@@ -188,8 +254,80 @@
               <thead>
                 <tr>
                   <th></th>
-                  <th>รหัสนักศึกษา</th>
-                  <th>ชื่อ</th>
+                  <th
+                    (click)="
+                      studentOrder(
+                        orderByStudent.key == 'studentId'
+                          ? orderByStudent.order == 'asc'
+                            ? 'desc'
+                            : 'asc'
+                          : 'asc',
+                        'studentId'
+                      )
+                    "
+                    style="cursor: pointer;"
+                  >
+                    รหัสนักศึกษา
+                    <span
+                      style="display:inline-block; padding-left: 10px;"
+                      [ngStyle]="{
+                        color:
+                          orderByStudent.order == 'asc' &&
+                          orderByStudent.key == 'studentId'
+                            ? '#007bff'
+                            : '#b0b0b0'
+                      }"
+                      ><i class="fas fa-arrow-up fa-sm"></i
+                    ></span>
+                    <span
+                      style="display:inline-block; padding-left: 3px;"
+                      [ngStyle]="{
+                        color:
+                          orderByStudent.order == 'desc' &&
+                          orderByStudent.key == 'studentId'
+                            ? '#007bff'
+                            : '#b0b0b0'
+                      }"
+                      ><i class="fas fa-arrow-down fa-sm"></i
+                    ></span>
+                  </th>
+                  <th
+                    (click)="
+                      studentOrder(
+                        orderByStudent.key == 'fname'
+                          ? orderByStudent.order == 'asc'
+                            ? 'desc'
+                            : 'asc'
+                          : 'asc',
+                        'fname'
+                      )
+                    "
+                    style="cursor: pointer;"
+                  >
+                    ชื่อ
+                    <span
+                      style="display:inline-block; padding-left: 10px;"
+                      [ngStyle]="{
+                        color:
+                          orderByStudent.order == 'asc' &&
+                          orderByStudent.key == 'fname'
+                            ? '#007bff'
+                            : '#b0b0b0'
+                      }"
+                      ><i class="fas fa-arrow-up fa-sm"></i
+                    ></span>
+                    <span
+                      style="display:inline-block; padding-left: 3px;"
+                      [ngStyle]="{
+                        color:
+                          orderByStudent.order == 'desc' &&
+                          orderByStudent.key == 'fname'
+                            ? '#007bff'
+                            : '#b0b0b0'
+                      }"
+                      ><i class="fas fa-arrow-down fa-sm"></i
+                    ></span>
+                  </th>
                   <th></th>
                 </tr>
               </thead>
@@ -208,10 +346,10 @@
                   <td style="vertical-align: middle; min-width: 30px;">
                     {{ i + 1 }}
                   </td>
-                  <td style="vertical-align: middle; min-width: 130px;">
+                  <td style="vertical-align: middle; min-width: 150px;">
                     {{ x.studentId }}
                   </td>
-                  <td style="vertical-align: middle; min-width: 230px;">
+                  <td style="vertical-align: middle; min-width: 250px;">
                     {{ x.prename }}{{ x.fname }}&nbsp;{{ x.lname }}
                   </td>
                   <td style="vertical-align: middle;">

@@ -18,6 +18,14 @@ export class ManageGroupComponent implements OnInit {
   public pagiShowStudent: number = 1;
   public _windows: any = window;
   public selectStudentgroup: any = null;
+  public orderByGroup = {
+    order: "asc",
+    key: "gName"
+  };
+  public orderByStudent = {
+    order: "asc",
+    key: "studentId"
+  };
   constructor(
     private alert: AlertService,
     private http: HttpService,
@@ -85,9 +93,9 @@ export class ManageGroupComponent implements OnInit {
     let httpResponse: any = await this.http.post("group/creategroup", formData);
     if (httpResponse.connect) {
       if (httpResponse.value.result == true) {
-        this.alert.alert("success", "เพื่มกลุ่มสำเร็จ");
         this.selectGroup();
         this._windows.$("#createGroup").modal("hide");
+        this.alert.alert("success", "เพื่มกลุ่มสำเร็จ");
       } else {
         this.alert.alert("error", httpResponse.value.message);
       }
@@ -106,9 +114,9 @@ export class ManageGroupComponent implements OnInit {
     let httpResponse: any = await this.http.post("group/groupupdate", formData);
     if (httpResponse.connect) {
       if (httpResponse.value.result == true) {
-        this.alert.alert("success", "เเก้ไข้สำเร็จ");
         this.selectGroup();
         this._windows.$("#editGroup").modal("hide");
+        this.alert.alert("success", "เเก้ไขสำเร็จ");
       } else {
         this.alert.alert("error", httpResponse.value.message);
       }
@@ -118,12 +126,14 @@ export class ManageGroupComponent implements OnInit {
   };
 
   public selectGroup = async () => {
+    this.groupresult = null;
     let httpResponse: any = await this.http.get(
       "group/showgroup/" + this.localStorage.get("userlogin")["username"]
     );
     if (httpResponse.connect) {
       if (httpResponse.value.result == true) {
         this.groupresult = httpResponse.value.data.result;
+        this.groupOrder(this.orderByGroup.order, this.orderByGroup.key);
       } else {
         this.alert.alert("error", httpResponse.value.message);
       }
@@ -137,10 +147,57 @@ export class ManageGroupComponent implements OnInit {
     if (httpResponse.connect) {
       if (httpResponse.value.result == true) {
         this.studentInGroup = httpResponse.value.data.result;
+        this.studentOrder(this.orderByStudent.order, this.orderByStudent.key);
         // console.log(this.studentInGroup);
       } else {
         this.alert.alert("error", httpResponse.value.message);
       }
+    }
+  };
+
+  public studentOrder = (order: string, key: string) => {
+    this.orderByStudent = {
+      order: order,
+      key: key
+    };
+
+    let n = this.studentInGroup.length;
+    for (let i = 1; i < n; ++i) {
+      let keysort = this.studentInGroup[i][key];
+      let keysort2 = this.studentInGroup[i];
+      let j = i - 1;
+      while (
+        j >= 0 &&
+        this.studentInGroup[j][key].localeCompare(keysort) ==
+          (order == "desc" ? -1 : 1)
+      ) {
+        this.studentInGroup[j + 1] = this.studentInGroup[j];
+        j = j - 1;
+      }
+      this.studentInGroup[j + 1] = keysort2;
+    }
+  };
+
+  public groupOrder = (order: string, key: string) => {
+    this.orderByGroup = {
+      order: order,
+      key: key
+    };
+
+    let n = this.groupresult.length;
+    for (let i = 1; i < n; ++i) {
+      let keysort = this.groupresult[i][key];
+      let keysort2 = this.groupresult[i];
+      let j = i - 1;
+      while (
+        j >= 0 &&
+        this.groupresult[j][key].localeCompare(keysort) ==
+          (order == "desc" ? -1 : 1)
+      ) {
+        this.groupresult[j + 1] = this.groupresult[j];
+        j = j - 1;
+      }
+      this.groupresult[j + 1] = keysort2;
     }
   };
 }

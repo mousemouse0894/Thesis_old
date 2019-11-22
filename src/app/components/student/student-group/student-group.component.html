@@ -1,1 +1,141 @@
-<p>student-group works!</p>
+<div style="padding: 15px;">
+  <div class="row">
+    <div class="col-6 mb-3 text-left">
+      <h5><b>กลุ่มเรียน</b></h5>
+    </div>
+  </div>
+  <div
+    class="spinner-border text-primary"
+    role="status"
+    *ngIf="studentgroupresult == null"
+  >
+    <span class="sr-only">Loading...</span>
+  </div>
+  <div *ngIf="messageGroup == 'ไม่มีกลุ่มเรียน'">
+    <div>
+      <div class="row">
+        <div class="col-4">
+          <div>
+            <mat-form-field style="max-width: 150px;">
+              <mat-label>จำนวนแถว</mat-label>
+              <mat-select #rowShow value="10">
+                <mat-option value="10">
+                  10
+                </mat-option>
+                <mat-option value="25">
+                  25
+                </mat-option>
+                <mat-option value="50">
+                  50
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-8">
+          <mat-form-field>
+            <input matInput placeholder="ค้นหากลุ่มเรียน" />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div style="overflow: auto;" *ngIf="studentgroupresult != null">
+      <table class="table table-sm table-borderless table-striped table-hover">
+        <thead>
+          <tr>
+            <th></th>
+            <th>ชื่อกลุ่มเรียน</th>
+            <th>อาจารย์ประจำวิชา</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="
+              let x of studentgroupresult
+                | paginate
+                  : {
+                      itemsPerPage: rowShow.value,
+                      currentPage: pagiStudentGroup
+                    };
+              let i = index
+            "
+          >
+            <th style="vertical-align: middle; min-width: 30px;">
+              {{ i + 1 }}
+            </th>
+            <td style="vertical-align: middle; min-width: 120px;">
+              {{ x.gName }}
+            </td>
+            <td style="vertical-align: middle; min-width: 150px;">
+              {{ x.gOwner_fk }}
+            </td>
+
+            <td style="vertical-align: middle; min-width: 120px;">
+              <button
+                type="button"
+                class="btn btn-primary btn-sm"
+                data-toggle="modal"
+                data-target="#enterPasswordGroup"
+                (click)="enterStudentGroup(x.gId, x.gName, x.gOwner_fk)"
+              >
+                เข้ากลุ่มเรียน
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div *ngIf="messageGroup == 'มีกลุ่มเรียนแล้ว'">
+    <div style="overflow: auto;">
+      กลุ่มเรียนของคุณคือ {{ studentgroupresult[0].gName }} อาจารย์ประจำวิชา
+      {{ studentgroupresult[0].gOwner_fk }}
+    </div>
+  </div>
+</div>
+
+<!-- enterPasswordGroup -->
+<div
+  class="modal fade"
+  id="enterPasswordGroup"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="enterPasswordGroupLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="enterPasswordGroupLabel">
+          เข้ากลุ่มเรียน {{ nameGroupForm }} {{ groupOwnerFrom }}
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <mat-form-field>
+          <input matInput placeholder="รหัสผ่านกลุ่ม" #PasswordGroup />
+        </mat-form-field>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          ปิด
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="enterPasswordGroup(PasswordGroup.value)"
+        >
+          ยืนยัน
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

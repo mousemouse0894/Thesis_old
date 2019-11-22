@@ -15,6 +15,7 @@ export class ManageGroupComponent implements OnInit {
   public groupresult: any = null;
   public studentInGroup: any = null;
   public p: number = 1;
+  public pagiShowStudent: number = 1;
   public _windows: any = window;
   public selectStudentgroup: any = null;
   constructor(
@@ -74,7 +75,7 @@ export class ManageGroupComponent implements OnInit {
   };
 
   public submitCreateGroup = async () => {
-    console.log(this.formGroup.value);
+    // console.log(this.formGroup.value);
     this.service.loadingState = true;
     let formData = new FormData();
     Object.keys(this.formGroup.value).forEach(key => {
@@ -100,7 +101,7 @@ export class ManageGroupComponent implements OnInit {
     let formData = new FormData();
     Object.keys(this.formGroup.value).forEach(key => {
       formData.append(`${key}`, this.formGroup.value[key]);
-      console.log(`${key}`, this.formGroup.value[key]);
+      // console.log(`${key}`, this.formGroup.value[key]);
     });
     let httpResponse: any = await this.http.post("group/groupupdate", formData);
     if (httpResponse.connect) {
@@ -136,7 +137,7 @@ export class ManageGroupComponent implements OnInit {
     if (httpResponse.connect) {
       if (httpResponse.value.result == true) {
         this.studentInGroup = httpResponse.value.data.result;
-        console.log(this.studentInGroup);
+        // console.log(this.studentInGroup);
       } else {
         this.alert.alert("error", httpResponse.value.message);
       }

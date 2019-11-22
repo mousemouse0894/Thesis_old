@@ -144,9 +144,18 @@
         <div class="row">
           <div class="col-4">
             <div>
-              <mat-form-field style="max-width: 150px;">
+              <mat-form-field
+                style="max-width: 150px;"
+                [hidden]="
+                  studentInGroup != null
+                    ? studentInGroup.length <= 10
+                      ? true
+                      : false
+                    : true
+                "
+              >
                 <mat-label>จำนวนแถว</mat-label>
-                <mat-select #rowShow value="10">
+                <mat-select #rowShowStudent value="10">
                   <mat-option value="10">
                     10
                   </mat-option>
@@ -179,8 +188,8 @@
               <thead>
                 <tr>
                   <th></th>
-                  <th>ชื่อ</th>
                   <th>รหัสนักศึกษา</th>
+                  <th>ชื่อ</th>
                   <th></th>
                 </tr>
               </thead>
@@ -189,18 +198,21 @@
                   *ngFor="
                     let x of studentInGroup
                       | paginate
-                        : { itemsPerPage: rowShow.value, currentPage: p };
+                        : {
+                            itemsPerPage: rowShowStudent.value,
+                            currentPage: pagiShowStudent
+                          };
                     let i = index
                   "
                 >
                   <td style="vertical-align: middle; min-width: 30px;">
                     {{ i + 1 }}
                   </td>
-                  <td style="vertical-align: middle; min-width: 230px;">
-                    {{ x.prename }}{{ x.fname }}&nbsp;{{ x.lname }}
-                  </td>
                   <td style="vertical-align: middle; min-width: 130px;">
                     {{ x.studentId }}
+                  </td>
+                  <td style="vertical-align: middle; min-width: 230px;">
+                    {{ x.prename }}{{ x.fname }}&nbsp;{{ x.lname }}
                   </td>
                   <td style="vertical-align: middle;">
                     <span
@@ -221,8 +233,8 @@
           </div>
           <div class="text-center" *ngIf="groupresult">
             <pagination-controls
-              *ngIf="groupresult.length >= rowShow.value"
-              (pageChange)="p = $event"
+              *ngIf="groupresult.length >= rowShowStudent.value"
+              (pageChange)="pagiShowStudent = $event"
             ></pagination-controls>
           </div>
         </div>

@@ -33,12 +33,20 @@ export class HttpService {
           }
         )
         .toPromise()
-        .then((value: any) => {
+        .then(async (value: any) => {
           if (value.message == "การตรวจสอบเซสชั่นผิดพลาด") {
+            let httpResponse = await this.get(
+              "login/onLogout",
+              `?username=${this.localStorage.get("userlogin")["username"]}`
+            );
             this.router.navigate(["/login"]);
             this.localStorage.clear();
             this.alert.alert("warning", "โปรดเข้าสู่ระบบอีกครั่ง");
           } else if (value.message == "เซสชั่นหมดอายุ") {
+            let httpResponse = await this.get(
+              "login/onLogout",
+              `?username=${this.localStorage.get("userlogin")["username"]}`
+            );
             this.router.navigate(["/login"]);
             this.localStorage.clear();
             this.alert.alert("warning", "โปรดเข้าสู่ระบบอีกครั่ง");
@@ -73,12 +81,20 @@ export class HttpService {
           }
         )
         .toPromise()
-        .then((value: any) => {
+        .then(async (value: any) => {
           if (value.message == "การตรวจสอบเซสชั่นผิดพลาด") {
+            let httpResponse = await this.get(
+              "login/onLogout",
+              `?username=${this.localStorage.get("userlogin")["username"]}`
+            );
             this.router.navigate(["/login"]);
             this.localStorage.clear();
             this.alert.alert("warning", "โปรดเข้าสู่ระบบอีกครั่ง");
           } else if (value.message == "เซสชั่นหมดอายุ") {
+            let httpResponse = await this.get(
+              "login/onLogout",
+              `?username=${this.localStorage.get("userlogin")["username"]}`
+            );
             this.router.navigate(["/login"]);
             this.localStorage.clear();
             this.alert.alert("warning", "โปรดเข้าสู่ระบบอีกครั่ง");

@@ -12,6 +12,7 @@ import { AppService } from "src/app/services/app.service";
 })
 export class StudentGroupComponent implements OnInit {
   public studentgroupresult: any = null;
+  public teachergroupresult: any = null;
   public pagiStudentGroup: number = 1;
   public messageGroup: any = null;
   public formGroup: FormGroup;
@@ -20,6 +21,15 @@ export class StudentGroupComponent implements OnInit {
   public groupOwnerFrom: any = null;
   public nameOwnerFrom: any = null;
   public _windows: any = window;
+  public orderByGroup = {
+    order: "asc",
+    key: "gName"
+  };
+  public orderByteacher = {
+    order: "asc",
+    key: "gOwner_fk"
+  };
+
   constructor(
     private alert: AlertService,
     private http: HttpService,
@@ -95,5 +105,51 @@ export class StudentGroupComponent implements OnInit {
     }
 
     this.service.loadingState = false;
+  };
+
+  public groupOrder = (order: string, key: string) => {
+    this.orderByGroup = {
+      order: order,
+      key: key
+    };
+
+    let n = this.studentgroupresult.length;
+    for (let i = 1; i < n; ++i) {
+      let keysort = this.studentgroupresult[i][key];
+      let keysort2 = this.studentgroupresult[i];
+      let j = i - 1;
+      while (
+        j >= 0 &&
+        this.studentgroupresult[j][key].localeCompare(keysort) ==
+          (order == "desc" ? -1 : 1)
+      ) {
+        this.studentgroupresult[j + 1] = this.studentgroupresult[j];
+        j = j - 1;
+      }
+      this.studentgroupresult[j + 1] = keysort2;
+    }
+  };
+
+  public teacherOrder = (order: string, key: string) => {
+    this.orderByteacher = {
+      order: order,
+      key: key
+    };
+
+    let n = this.studentgroupresult.length;
+    for (let i = 1; i < n; ++i) {
+      let keysort = this.studentgroupresult[i][key];
+      let keysort2 = this.studentgroupresult[i];
+      let j = i - 1;
+      while (
+        j >= 0 &&
+        this.studentgroupresult[j][key].localeCompare(keysort) ==
+          (order == "desc" ? -1 : 1)
+      ) {
+        this.studentgroupresult[j + 1] = this.studentgroupresult[j];
+        j = j - 1;
+      }
+      this.studentgroupresult[j + 1] = keysort2;
+    }
   };
 }

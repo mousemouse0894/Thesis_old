@@ -165,6 +165,7 @@ export class ManageGroupComponent implements OnInit {
     for (let i = 1; i < n; ++i) {
       let keysort = this.studentInGroup[i][key];
       let keysort2 = this.studentInGroup[i];
+
       let j = i - 1;
       while (
         j >= 0 &&

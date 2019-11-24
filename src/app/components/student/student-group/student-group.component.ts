@@ -18,6 +18,7 @@ export class StudentGroupComponent implements OnInit {
   public IdGroupForm: any = null;
   public nameGroupForm: any = null;
   public groupOwnerFrom: any = null;
+  public nameOwnerFrom: any = null;
   public _windows: any = window;
   constructor(
     private alert: AlertService,
@@ -38,17 +39,26 @@ export class StudentGroupComponent implements OnInit {
     if (httpResponse.connect) {
       if (httpResponse.value.result == true) {
         this.studentgroupresult = httpResponse.value.data.result;
-        // console.log(this.studentgroupresult);
+        console.log(this.studentgroupresult);
         this.messageGroup = httpResponse.value.message;
       } else {
         this.alert.alert("error", httpResponse.value.message);
       }
     }
   };
-  public enterStudentGroup = (gId: any, gName: any, owner: any) => {
+
+  public enterStudentGroup = (
+    gId: any,
+    gName: any,
+    owner: any,
+    prename: any,
+    fname: any,
+    lname: any
+  ) => {
     this.IdGroupForm = gId;
     this.nameGroupForm = gName;
     this.groupOwnerFrom = owner;
+    this.nameOwnerFrom = prename + fname + lname;
   };
   public enterPasswordGroup = async PasswordGroup => {
     this.formGroup = this.formBuilder.group({

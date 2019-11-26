@@ -38,22 +38,27 @@ export class ManageGroupComponent implements OnInit {
 
   ngOnInit() {}
 
-  public searchGroup = (array:any, searchString:string) =>{
-    if(searchString.length > 0)
-      return array.filter(value => value.gName.indexOf(searchString) > -1)  
-    else {
-      return array
+  public searchGroup = (array: any, searchString: string) => {
+    if (searchString.length > 0) {
+      return [
+        ...array.filter(value => value.gName.indexOf(searchString) > -1),
+        ...array.filter(value => value.gStatus == searchString)
+      ];
+    } else {
+      return array;
     }
-  }
+  };
 
-  public searchStudent= (array:any, searchString:string) =>{
-    if(searchString.length > 0)
-      return [...array.filter(value => value.studentId.indexOf(searchString) > -1),...array.filter(value => value.fname.indexOf(searchString) > -1)]
-    else {
-      return array
+  public searchStudent = (array: any, searchString: string) => {
+    if (searchString.length > 0) {
+      return [
+        ...array.filter(value => value.studentId.indexOf(searchString) > -1),
+        ...array.filter(value => value.fname.indexOf(searchString) > -1)
+      ];
+    } else {
+      return array;
     }
-  }
-
+  };
 
   public deleteStudent = (username: String) => {
     this.alert.confirmAlert("ยืนยันการลบ").then(async (value: any) => {
@@ -201,21 +206,23 @@ export class ManageGroupComponent implements OnInit {
       order: order,
       key: key
     };
+  };
 
-    let n = this.groupresult.length;
+  public groupOrderSearch = (arr2: Array<any>, order: string, key: string) => {
+    let n = arr2.length;
     for (let i = 1; i < n; ++i) {
-      let keysort = this.groupresult[i][key];
-      let keysort2 = this.groupresult[i];
+      let keysort = arr2[i][key];
+      let keysort2 = arr2[i];
       let j = i - 1;
       while (
         j >= 0 &&
-        this.groupresult[j][key].localeCompare(keysort) ==
-          (order == "desc" ? -1 : 1)
+        arr2[j][key].localeCompare(keysort) == (order == "desc" ? -1 : 1)
       ) {
-        this.groupresult[j + 1] = this.groupresult[j];
+        arr2[j + 1] = arr2[j];
         j = j - 1;
       }
-      this.groupresult[j + 1] = keysort2;
+      arr2[j + 1] = keysort2;
     }
+    return arr2;
   };
 }

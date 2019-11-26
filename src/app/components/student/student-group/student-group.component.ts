@@ -40,7 +40,6 @@ export class StudentGroupComponent implements OnInit {
 
   public searchGroup = (array: any, searchString: string) => {
     if (searchString.length > 0) {
-      console.log(searchString, array);
       return [
         ...array.filter(value => value.gName.indexOf(searchString) > -1),
         ...array.filter(value => value.prename.indexOf(searchString) > -1),

@@ -134,17 +134,28 @@
       <tbody>
         <tr
           *ngFor="
-            let x of searchGroup(groupresult, searchGroupInput.value)
-              | paginate: { itemsPerPage: rowShow.value, currentPage: p };
+            let x of groupOrderSearch(
+              searchGroup(groupresult, searchGroupInput.value),
+              orderByGroup.order,
+              orderByGroup.key
+            ) | paginate: { itemsPerPage: rowShow.value, currentPage: p };
             let i = index
           "
         >
-          <th style="vertical-align: middle; min-width: 30px;">{{ ((p*rowShow.value)-rowShow.value)+(i+1) }}</th>
+          <th style="vertical-align: middle; min-width: 30px;">
+            {{ p * rowShow.value - rowShow.value + (i + 1) }}
+          </th>
           <td style="vertical-align: middle; min-width: 140px;">
             {{ x.gName }}
           </td>
           <td style="vertical-align: middle; min-width: 150px;">{{ x.gPw }}</td>
-          <td style="vertical-align: middle; min-width: 120px;" [ngClass]="{'text-success': x.gStatus =='เปิด','text-danger font-weight-bold': x.gStatus =='ปิด'}" >
+          <td
+            style="vertical-align: middle; min-width: 120px;"
+            [ngClass]="{
+              'text-success': x.gStatus == 'เปิด',
+              'text-danger font-weight-bold': x.gStatus == 'ปิด'
+            }"
+          >
             {{ x.gStatus }}
           </td>
           <td style="vertical-align: middle; min-width: 120px;">
@@ -237,7 +248,7 @@
           </div>
           <div class="col-8">
             <mat-form-field>
-              <input matInput placeholder="ค้นหานักศึกษา" #searchStudentText/>
+              <input matInput placeholder="ค้นหานักศึกษา" #searchStudentText />
             </mat-form-field>
           </div>
         </div>
@@ -334,7 +345,10 @@
               <tbody>
                 <tr
                   *ngFor="
-                    let x of searchStudent(studentInGroup,searchStudentText.value)
+                    let x of searchStudent(
+                      studentInGroup,
+                      searchStudentText.value
+                    )
                       | paginate
                         : {
                             itemsPerPage: rowShowStudent.value,

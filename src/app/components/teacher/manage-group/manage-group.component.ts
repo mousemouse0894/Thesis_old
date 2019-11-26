@@ -38,6 +38,23 @@ export class ManageGroupComponent implements OnInit {
 
   ngOnInit() {}
 
+  public searchGroup = (array:any, searchString:string) =>{
+    if(searchString.length > 0)
+      return array.filter(value => value.gName.indexOf(searchString) > -1)  
+    else {
+      return array
+    }
+  }
+
+  public searchStudent= (array:any, searchString:string) =>{
+    if(searchString.length > 0)
+      return [...array.filter(value => value.studentId.indexOf(searchString) > -1),...array.filter(value => value.fname.indexOf(searchString) > -1)]
+    else {
+      return array
+    }
+  }
+
+
   public deleteStudent = (username: String) => {
     this.alert.confirmAlert("ยืนยันการลบ").then(async (value: any) => {
       if (value) {

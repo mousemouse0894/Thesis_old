@@ -1,3 +1,4 @@
+import { ManageAccessComponent } from "./manage-access/manage-access.component";
 import { ManageExamStoreComponent } from "./manage-exam-store/manage-exam-store.component";
 import { ManageGroupComponent } from "./manage-group/manage-group.component";
 import { TeacherComponent } from "./teacher.component";
@@ -11,6 +12,7 @@ const routes: Routes = [
     children: [
       { path: "group", component: ManageGroupComponent },
       { path: "store", component: ManageExamStoreComponent },
+      { path: "access", component: ManageAccessComponent },
       { path: "", pathMatch: "full", redirectTo: "/teacher/group" }
     ]
   }

@@ -25,10 +25,6 @@ export class StudentGroupComponent implements OnInit {
     order: "asc",
     key: "gName"
   };
-  public orderByteacher = {
-    order: "asc",
-    key: "gOwner_fk"
-  };
 
   constructor(
     private alert: AlertService,
@@ -42,6 +38,20 @@ export class StudentGroupComponent implements OnInit {
 
   ngOnInit() {}
 
+  public searchGroup = (array: any, searchString: string) => {
+    if (searchString.length > 0) {
+      console.log(searchString, array);
+      return [
+        ...array.filter(value => value.gName.indexOf(searchString) > -1),
+        ...array.filter(value => value.prename.indexOf(searchString) > -1),
+        ...array.filter(value => value.fname.indexOf(searchString) > -1),
+        ...array.filter(value => value.lname.indexOf(searchString) > -1)
+      ];
+    } else {
+      return array;
+    }
+  };
+
   public selectStudentGroup = async () => {
     let httpResponse: any = await this.http.get(
       "group/showstgroup/" + this.localStorage.get("userlogin")["username"]
@@ -49,7 +59,8 @@ export class StudentGroupComponent implements OnInit {
     if (httpResponse.connect) {
       if (httpResponse.value.result == true) {
         this.studentgroupresult = httpResponse.value.data.result;
-        console.log(this.studentgroupresult);
+        this.groupOrder(this.orderByGroup.order, this.orderByGroup.key);
+        // console.log(this.studentgroupresult);
         this.messageGroup = httpResponse.value.message;
       } else {
         this.alert.alert("error", httpResponse.value.message);
@@ -112,30 +123,6 @@ export class StudentGroupComponent implements OnInit {
       order: order,
       key: key
     };
-
-    let n = this.studentgroupresult.length;
-    for (let i = 1; i < n; ++i) {
-      let keysort = this.studentgroupresult[i][key];
-      let keysort2 = this.studentgroupresult[i];
-      let j = i - 1;
-      while (
-        j >= 0 &&
-        this.studentgroupresult[j][key].localeCompare(keysort) ==
-          (order == "desc" ? -1 : 1)
-      ) {
-        this.studentgroupresult[j + 1] = this.studentgroupresult[j];
-        j = j - 1;
-      }
-      this.studentgroupresult[j + 1] = keysort2;
-    }
-  };
-
-  public teacherOrder = (order: string, key: string) => {
-    this.orderByteacher = {
-      order: order,
-      key: key
-    };
-
     let n = this.studentgroupresult.length;
     for (let i = 1; i < n; ++i) {
       let keysort = this.studentgroupresult[i][key];

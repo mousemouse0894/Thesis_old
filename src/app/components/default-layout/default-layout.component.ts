@@ -106,9 +106,7 @@ export class DefaultLayoutComponent implements OnInit {
           this.localStorage.clear();
           window.location.replace(
             "http://www.cpe.rmuti.ac.th/project/sqlchecking/sso/index.php?slo&redirect=" +
-              window.location.hostname.includes("localhost")
-              ? "http://localhost:1000/login"
-              : "http://www.cpe.rmuti.ac.th/project/sqlchecking/login"
+              "http://www.cpe.rmuti.ac.th/project/sqlchecking/login"
           );
           this.service.loadingState = false;
         }

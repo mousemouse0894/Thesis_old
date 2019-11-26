@@ -115,6 +115,19 @@
       <a
         mat-list-item
         href="javascript:void(0)"
+        *ngIf="localStorage.get('userlogin')['role'] != '4500'"
+        [routerLink]="['/teacher/access']"
+        [routerLinkActive]="['link-active']"
+        (click)="stateScreen.displayMatch == false ? sidebarChange() : ''"
+      >
+        <span style="display: inline-block;width: 30px;">
+          <i class="fas fa-user-cog"></i>
+        </span>
+        จัดการเซสชั่น</a
+      >
+      <a
+        mat-list-item
+        href="javascript:void(0)"
         [routerLink]="['/changePassword']"
         [routerLinkActive]="['link-active']"
         (click)="stateScreen.displayMatch == false ? sidebarChange() : ''"

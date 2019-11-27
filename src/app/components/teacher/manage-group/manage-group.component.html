@@ -134,7 +134,7 @@
       <tbody>
         <tr
           *ngFor="
-            let x of groupOrderSearch(
+            let x of sortArray(
               searchGroup(groupresult, searchGroupInput.value),
               orderByGroup.order,
               orderByGroup.key
@@ -246,7 +246,16 @@
               </mat-form-field>
             </div>
           </div>
-          <div class="col-8">
+          <div
+            class="col-8"
+            [hidden]="
+              studentInGroup != null
+                ? studentInGroup.length <= 0
+                  ? true
+                  : false
+                : true
+            "
+          >
             <mat-form-field>
               <input matInput placeholder="ค้นหานักศึกษา" #searchStudentText />
             </mat-form-field>

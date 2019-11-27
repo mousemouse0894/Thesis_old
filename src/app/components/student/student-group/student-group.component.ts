@@ -42,7 +42,6 @@ export class StudentGroupComponent implements OnInit {
     if (searchString.length > 0) {
       return [
         ...array.filter(value => value.gName.indexOf(searchString) > -1),
-        ...array.filter(value => value.prename.indexOf(searchString) > -1),
         ...array.filter(value => value.fname.indexOf(searchString) > -1),
         ...array.filter(value => value.lname.indexOf(searchString) > -1)
       ];
@@ -122,20 +121,23 @@ export class StudentGroupComponent implements OnInit {
       order: order,
       key: key
     };
-    let n = this.studentgroupresult.length;
+  };
+
+  public sortArray = (arr2: Array<any>, order: string, key: string) => {
+    let n = arr2.length;
     for (let i = 1; i < n; ++i) {
-      let keysort = this.studentgroupresult[i][key];
-      let keysort2 = this.studentgroupresult[i];
+      let keysort = arr2[i][key];
+      let keysort2 = arr2[i];
       let j = i - 1;
       while (
         j >= 0 &&
-        this.studentgroupresult[j][key].localeCompare(keysort) ==
-          (order == "desc" ? -1 : 1)
+        arr2[j][key].localeCompare(keysort) == (order == "desc" ? -1 : 1)
       ) {
-        this.studentgroupresult[j + 1] = this.studentgroupresult[j];
+        arr2[j + 1] = arr2[j];
         j = j - 1;
       }
-      this.studentgroupresult[j + 1] = keysort2;
+      arr2[j + 1] = keysort2;
     }
+    return arr2;
   };
 }

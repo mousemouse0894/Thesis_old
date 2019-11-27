@@ -1,1 +1,75 @@
-<p>manage-access works!</p>
+<div style="padding: 15px;">
+  <div class="row">
+    <div class="col-6 mb-3 text-left">
+      <h5><b>จัดการเซสชั่น</b></h5>
+    </div>
+    <div class="col-6 mb-3 text-right">
+      <button
+        type="button"
+        class="btn btn-danger btn-sm "
+        (click)="deleteAllSelect()"
+      >
+        <i class="fas fa-trash"></i>&nbsp;ลบที่เลือก
+      </button>
+    </div>
+  </div>
+  <div
+    class="spinner-border text-primary"
+    role="status"
+    *ngIf="accessStudentrecord == null"
+  >
+    <span class="sr-only">Loading...</span>
+  </div>
+  <div *ngIf="accessStudentrecord != null">
+    <div style="overflow: auto;" *ngIf="accessStudentrecord.length > 0">
+      <table class="table table-sm table-borderless table-striped table-hover">
+        <thead>
+          <tr>
+            <th class="text-center">
+              <input
+                type="checkbox"
+                aria-label="Checkbox Header"
+                (change)="checkEvent()"
+                [(ngModel)]="checkAllselect"
+              />
+            </th>
+            <th></th>
+            <th>
+              ชื่อนักเรียน
+            </th>
+            <th>
+              ไอพี
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let x of accessStudentrecord; let i = index">
+            <th
+              style="vertical-align: middle; min-width: 30px;"
+              class="text-center"
+            >
+              <input
+                type="checkbox"
+                aria-label="Checkbox Body"
+                id="check_{{ x.username }}"
+                (change)="checkAllselect = false"
+              />
+            </th>
+            <th style="vertical-align: middle; min-width: 30px;">
+              {{ i + 1 }}
+            </th>
+            <td style="vertical-align: middle; min-width: 120px;">
+              {{ x.prename }} {{ x.fname }} {{ x.lname }}
+            </td>
+            <td style="vertical-align: middle; min-width: 150px;">
+              {{ x.ipaddress }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngIf="accessStudentrecord.length <= 0" class="text-center">
+      <h5>ไม่พบเซสชั่น</h5>
+    </div>
+  </div>
+</div>

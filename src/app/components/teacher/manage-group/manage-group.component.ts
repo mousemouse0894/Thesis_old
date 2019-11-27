@@ -182,23 +182,6 @@ export class ManageGroupComponent implements OnInit {
       order: order,
       key: key
     };
-
-    let n = this.studentInGroup.length;
-    for (let i = 1; i < n; ++i) {
-      let keysort = this.studentInGroup[i][key];
-      let keysort2 = this.studentInGroup[i];
-
-      let j = i - 1;
-      while (
-        j >= 0 &&
-        this.studentInGroup[j][key].localeCompare(keysort) ==
-          (order == "desc" ? -1 : 1)
-      ) {
-        this.studentInGroup[j + 1] = this.studentInGroup[j];
-        j = j - 1;
-      }
-      this.studentInGroup[j + 1] = keysort2;
-    }
   };
 
   public groupOrder = (order: string, key: string) => {
@@ -208,7 +191,7 @@ export class ManageGroupComponent implements OnInit {
     };
   };
 
-  public groupOrderSearch = (arr2: Array<any>, order: string, key: string) => {
+  public sortArray = (arr2: Array<any>, order: string, key: string) => {
     let n = arr2.length;
     for (let i = 1; i < n; ++i) {
       let keysort = arr2[i][key];

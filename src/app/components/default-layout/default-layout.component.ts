@@ -9,9 +9,15 @@ var screen_x = window.matchMedia("(min-width: 992px)");
 var cssRoot = document.documentElement;
 const screenMatch = callback => {
   callback(screen_x.matches);
-  screen_x.addEventListener("change", value => {
-    callback(value.matches);
-  });
+  if (screen_x.addEventListener) {
+    screen_x.addEventListener("change", value => {
+      callback(value.matches);
+    });
+  } else {
+    screen_x.addListener(value => {
+      callback(value.matches);
+    });
+  }
 };
 
 @Component({

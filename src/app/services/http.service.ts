@@ -41,11 +41,11 @@ export class HttpService {
             );
             this.router.navigate(["/login"]);
             this.localStorage.clear();
-            this.alert.alert("warning", "โปรดเข้าสู่ระบบอีกครั่ง");
+            this.alert.alert("warning", "โปรดเข้าสู่ระบบอีกครั้ง");
           } else if (value.message == "เซสชั่นหมดอายุ") {
             this.router.navigate(["/login"]);
             this.localStorage.clear();
-            this.alert.alert("warning", "โปรดเข้าสู่ระบบอีกครั่ง");
+            this.alert.alert("warning", "โปรดเข้าสู่ระบบอีกครั้ง");
           }
 
           resolve({ connect: true, value: value });
@@ -81,11 +81,11 @@ export class HttpService {
           if (value.message == "การตรวจสอบเซสชั่นผิดพลาด") {
             this.router.navigate(["/login"]);
             this.localStorage.clear();
-            this.alert.alert("warning", "โปรดเข้าสู่ระบบอีกครั่ง");
+            this.alert.alert("warning", "โปรดเข้าสู่ระบบอีกครั้ง");
           } else if (value.message == "เซสชั่นหมดอายุ") {
             this.router.navigate(["/login"]);
             this.localStorage.clear();
-            this.alert.alert("warning", "โปรดเข้าสู่ระบบอีกครั่ง");
+            this.alert.alert("warning", "โปรดเข้าสู่ระบบอีกครั้ง");
           }
           resolve({ connect: true, value: value });
         })

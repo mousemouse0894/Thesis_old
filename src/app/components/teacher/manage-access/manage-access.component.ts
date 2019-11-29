@@ -13,6 +13,7 @@ import { AppService } from "src/app/services/app.service";
 export class ManageAccessComponent implements OnInit {
   public accessStudentrecord: any = null;
   public checkAllselect: boolean = false;
+  public p: number = 1;
   constructor(
     private alert: AlertService,
     private http: HttpService,
@@ -89,5 +90,18 @@ export class ManageAccessComponent implements OnInit {
       listCheck = document.getElementById(`check_${element.username}`);
       listCheck.checked = this.checkAllselect;
     });
+  };
+
+  public searchStudent = (array: any, searchString: string) => {
+    if (searchString.length > 0) {
+      return Array.from(
+        new Set([
+          ...array.filter(value => value.fname.indexOf(searchString) > -1),
+          ...array.filter(value => value.lname.indexOf(searchString) > -1)
+        ])
+      );
+    } else {
+      return array;
+    }
   };
 }

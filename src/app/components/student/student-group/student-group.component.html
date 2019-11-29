@@ -197,37 +197,48 @@
   aria-hidden="true"
 >
   <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="enterPasswordGroupLabel">
-          เข้ากลุ่มเรียน {{ nameGroupForm }} {{ nameOwnerFrom }}
-        </h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
+    <form
+      #formGroup="ngForm"
+      (ngSubmit)="enterPasswordGroup(formGroup.value.password)"
+    >
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="enterPasswordGroupLabel">
+            เข้ากลุ่มเรียน {{ nameGroupForm }} {{ nameOwnerFrom }}
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <mat-form-field>
+            <input
+              matInput
+              placeholder="รหัสผ่านกลุ่ม"
+              name="password"
+              ngModel
+              required
+            />
+          </mat-form-field>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            ปิด
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="formGroup.invalid"
+          >
+            ยืนยัน
+          </button>
+        </div>
       </div>
-      <div class="modal-body">
-        <mat-form-field>
-          <input matInput placeholder="รหัสผ่านกลุ่ม" #PasswordGroup />
-        </mat-form-field>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-          ปิด
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="enterPasswordGroup(PasswordGroup.value)"
-        >
-          ยืนยัน
-        </button>
-      </div>
-    </div>
+    </form>
   </div>
 </div>

@@ -9,7 +9,9 @@ body {
 }
 
 * {
-  font-family: "Prompt", sans-serif !important;
+  // font-family: "Prompt", sans-serif !important;
+  font-family: "K2D", sans-serif !important;
+  // font-family: "Thasadith", sans-serif !important;
 }
 
 h1,
@@ -50,6 +52,7 @@ h6 {
 
 mat-form-field {
   width: 100%;
+  line-height: unset !important;
 }
 .cdk-overlay-container {
   z-index: 2000;

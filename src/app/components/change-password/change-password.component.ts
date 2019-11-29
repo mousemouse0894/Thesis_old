@@ -38,7 +38,7 @@ export class ChangePasswordComponent implements OnInit {
       if (httpResponse.connect) {
         if (httpResponse.value.result == true) {
           let changepass = this.localStorage.get("userlogin");
-          this.alert.alert("success", "เปลียนรหัสผ่านสำเร็จ");
+          this.alert.alert("success", "เปลี่ยนรหัสผ่านสำเร็จ");
           changepass["password"] = true;
           this.localStorage.set("userlogin", changepass);
         } else {

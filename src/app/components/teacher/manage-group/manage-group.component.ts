@@ -40,10 +40,12 @@ export class ManageGroupComponent implements OnInit {
 
   public searchGroup = (array: any, searchString: string) => {
     if (searchString.length > 0) {
-      return [
-        ...array.filter(value => value.gName.indexOf(searchString) > -1),
-        ...array.filter(value => value.gStatus == searchString)
-      ];
+      return Array.from(
+        new Set([
+          ...array.filter(value => value.gName.indexOf(searchString) > -1),
+          ...array.filter(value => value.gStatus == searchString)
+        ])
+      );
     } else {
       return array;
     }
@@ -51,10 +53,12 @@ export class ManageGroupComponent implements OnInit {
 
   public searchStudent = (array: any, searchString: string) => {
     if (searchString.length > 0) {
-      return [
-        ...array.filter(value => value.studentId.indexOf(searchString) > -1),
-        ...array.filter(value => value.fname.indexOf(searchString) > -1)
-      ];
+      return Array.from(
+        new Set([
+          ...array.filter(value => value.studentId.indexOf(searchString) > -1),
+          ...array.filter(value => value.fname.indexOf(searchString) > -1)
+        ])
+      );
     } else {
       return array;
     }
@@ -119,10 +123,14 @@ export class ManageGroupComponent implements OnInit {
         this._windows.$("#createGroup").modal("hide");
         this.alert.alert("success", "เพื่มกลุ่มสำเร็จ");
       } else {
-        this.alert.alert("error", httpResponse.value.message);
+        if (httpResponse.value.message.includes("Duplicate entry")) {
+          this.alert.alert("warning", "ไม่สามารถใช้ชื่อกลุ่มเรียนซ้ำได้");
+        } else {
+          this.alert.alert("error", httpResponse.value.message);
+        }
       }
     }
-
+    console.log(httpResponse);
     this.service.loadingState = false;
   };
 

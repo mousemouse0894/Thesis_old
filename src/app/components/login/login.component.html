@@ -38,7 +38,7 @@
                   <mat-form-field>
                     <input
                       matInput
-                      placeholder="รผัสผ่าน (Password)"
+                      placeholder="รหัสผ่าน (Password)"
                       name="password"
                       type="password"
                       required
@@ -92,13 +92,13 @@
                     class="btn btn-warning"
                     (click)="loginSSO()"
                   >
-                    เข้าสู่ระบบด้วยบัญชีอินเตอร์เน็ต มทร.อีสาน
+                    เข้าสู่ระบบด้วยบัญชีอินเทอร์เน็ต มทร.อีสาน
                   </button>
                 </span>
               </div>
 
               <p class="text-danger" style="margin: unset;">
-                * หากเข้าใช้งานครั้งแรก โปรดเข้าสู่ระบบด้วยบัญชีอินเตอร์เน็ต
+                * หากเข้าใช้งานครั้งแรก โปรดเข้าสู่ระบบด้วยบัญชีอินเทอร์เน็ต
                 มทร.อีสาน
               </p>
             </div>
@@ -110,7 +110,7 @@
 </div>
 <nav class="navbar navbar-light bg-light fixed-bottom bg-white">
   <span
-    >&nbsp;&nbsp;Copyright © {{ getYear() }} สาขาวิชาวิศวกรรมคอมพิวเตอร์
+    >&nbsp;Copyright © {{ getYear() }} สาขาวิชาวิศวกรรมคอมพิวเตอร์
     มหาวิทยาลัยเทคโนโลยีราชมงคลอีสาน นครราชสีมา
   </span>
 </nav>
@@ -147,7 +147,6 @@
               type="text"
               required
               ngModel
-              #username
             />
           </mat-form-field>
           <mat-form-field>
@@ -158,7 +157,6 @@
               type="text"
               required
               ngModel
-              #PersonalId
             /> </mat-form-field
           ><mat-form-field>
             <input
@@ -168,7 +166,6 @@
               type="password"
               required
               ngModel
-              #password
             />
           </mat-form-field>
           <mat-form-field>
@@ -179,7 +176,6 @@
               type="password"
               required
               ngModel
-              #password2
             />
           </mat-form-field>
         </div>
@@ -191,14 +187,7 @@
             type="button"
             class="btn btn-primary"
             type="submit"
-            [disabled]="
-              username.value == '' ||
-              PersonalId == '' ||
-              password.value == '' ||
-              password2.value == ''
-                ? true
-                : false
-            "
+            [disabled]="forget.invalid"
           >
             ยืนยัน
           </button>

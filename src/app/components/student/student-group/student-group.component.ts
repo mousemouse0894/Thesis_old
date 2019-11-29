@@ -40,11 +40,13 @@ export class StudentGroupComponent implements OnInit {
 
   public searchGroup = (array: any, searchString: string) => {
     if (searchString.length > 0) {
-      return [
-        ...array.filter(value => value.gName.indexOf(searchString) > -1),
-        ...array.filter(value => value.fname.indexOf(searchString) > -1),
-        ...array.filter(value => value.lname.indexOf(searchString) > -1)
-      ];
+      return Array.from(
+        new Set([
+          ...array.filter(value => value.gName.indexOf(searchString) > -1),
+          ...array.filter(value => value.fname.indexOf(searchString) > -1),
+          ...array.filter(value => value.lname.indexOf(searchString) > -1)
+        ])
+      );
     } else {
       return array;
     }

@@ -13,6 +13,32 @@
       </button>
     </div>
   </div>
+  <div class="row">
+    <div class="col-4">
+      <div>
+        <mat-form-field style="max-width: 150px;">
+          <mat-label>จำนวนแถว</mat-label>
+          <mat-select #rowShow value="10">
+            <mat-option value="10">
+              10
+            </mat-option>
+            <mat-option value="25">
+              25
+            </mat-option>
+            <mat-option value="50">
+              50
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-8">
+      <mat-form-field>
+        <input matInput placeholder="ค้นหานักศึกษา" #searchStudentInput />
+      </mat-form-field>
+    </div>
+  </div>
+
   <div
     class="spinner-border text-primary"
     role="status"
@@ -43,7 +69,15 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let x of accessStudentrecord; let i = index">
+          <tr
+            *ngFor="
+              let x of searchStudent(
+                accessStudentrecord,
+                searchStudentInput.value
+              ) | paginate: { itemsPerPage: rowShow.value, currentPage: p };
+              let i = index
+            "
+          >
             <th
               style="vertical-align: middle; min-width: 30px;"
               class="text-center"
@@ -56,10 +90,10 @@
               />
             </th>
             <th style="vertical-align: middle; min-width: 30px;">
-              {{ i + 1 }}
+              {{ p * rowShow.value - rowShow.value + (i + 1) }}
             </th>
             <td style="vertical-align: middle; min-width: 120px;">
-              {{ x.prename }} {{ x.fname }} {{ x.lname }}
+              {{ x.prename }}{{ x.fname }}&nbsp; {{ x.lname }}
             </td>
             <td style="vertical-align: middle; min-width: 150px;">
               {{ x.ipaddress }}
@@ -68,6 +102,13 @@
         </tbody>
       </table>
     </div>
+    <div class="text-center" *ngIf="accessStudentrecord">
+      <pagination-controls
+        *ngIf="accessStudentrecord.length >= rowShow.value"
+        (pageChange)="p = $event"
+      ></pagination-controls>
+    </div>
+
     <div *ngIf="accessStudentrecord.length <= 0" class="text-center">
       <h5>ไม่พบเซสชั่น</h5>
     </div>

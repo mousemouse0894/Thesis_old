@@ -10,6 +10,7 @@
         data-toggle="modal"
         data-target="#createGroup"
         (click)="openCreateGroup()"
+        [disabled]="groupresult == null"
       >
         <i class="fa fa-plus-circle" aria-hidden="true"></i
         >&nbsp;เพิ่มกลุ่มเรียน
@@ -187,9 +188,15 @@
       </tbody>
     </table>
   </div>
-  <div class="text-center" *ngIf="groupresult">
+  <div class="text-center" *ngIf="groupresult != null">
     <pagination-controls
-      *ngIf="groupresult.length >= rowShow.value"
+      *ngIf="
+        sortArray(
+          searchGroup(groupresult, searchGroupInput.value),
+          orderByGroup.order,
+          orderByGroup.key
+        ).length >= rowShow.value
+      "
       (pageChange)="p = $event"
     ></pagination-controls>
   </div>
@@ -392,9 +399,12 @@
               </tbody>
             </table>
           </div>
-          <div class="text-center" *ngIf="groupresult">
+          <div class="text-center" *ngIf="studentInGroup != null">
             <pagination-controls
-              *ngIf="groupresult.length >= rowShowStudent.value"
+              *ngIf="
+                searchStudent(studentInGroup, searchStudentText.value).length >=
+                rowShowStudent.value
+              "
               (pageChange)="pagiShowStudent = $event"
             ></pagination-controls>
           </div>
@@ -449,7 +459,6 @@
                 matInput
                 placeholder="ชื่อกลุ่มเรียน"
                 formControlName="name"
-                #nameEdit
               />
             </mat-form-field>
           </div>
@@ -460,7 +469,7 @@
                 matInput
                 placeholder="รหัสผ่านกลุ่มเรียน"
                 formControlName="password"
-                #passwordEdit
+                (keydown)="$event.key == ' ' ? $event.preventDefault() : ''"
               />
             </mat-form-field>
           </div>
@@ -485,9 +494,7 @@
           <button
             type="submit"
             class="btn btn-primary"
-            [disabled]="
-              nameEdit.value == '' || passwordEdit.value == '' ? true : false
-            "
+            [disabled]="formGroup.invalid"
           >
             ยืนยัน
           </button>
@@ -527,7 +534,6 @@
                 matInput
                 placeholder="ชื่อกลุ่มเรียน"
                 formControlName="name"
-                #name
               />
             </mat-form-field>
           </div>
@@ -538,7 +544,7 @@
                 matInput
                 placeholder="รหัสผ่านกลุ่มเรียน"
                 formControlName="password"
-                #password
+                (keydown)="$event.key == ' ' ? $event.preventDefault() : ''"
               />
             </mat-form-field>
           </div>
@@ -563,7 +569,7 @@
           <button
             type="submit"
             class="btn btn-primary"
-            [disabled]="name.value == '' || password.value == '' ? true : false"
+            [disabled]="formGroup.invalid"
           >
             ยืนยัน
           </button>

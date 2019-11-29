@@ -61,8 +61,6 @@ export class DefaultLayoutComponent implements OnInit {
           : "0px"
       );
     });
-
-    console.log(this.localStorage.get("userlogin"));
     if (this.localStorage.get("userlogin")["password"] == false) {
       this.alert.alert("warning", "โปรดเปลี่ยนรหัสผ่านของท่าน");
     }
@@ -108,7 +106,6 @@ export class DefaultLayoutComponent implements OnInit {
             "login/onLogout",
             `?username=${this.localStorage.get("userlogin")["username"]}`
           );
-          console.log(httpResponse);
           this.localStorage.clear();
           window.location.replace(
             "http://www.cpe.rmuti.ac.th/project/sqlchecking/sso/index.php?slo&redirect=" +

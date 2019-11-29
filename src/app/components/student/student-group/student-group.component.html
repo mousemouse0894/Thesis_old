@@ -15,7 +15,15 @@
     <div>
       <div class="row">
         <div class="col-4">
-          <div>
+          <div
+            [hidden]="
+              sortArray(
+                searchGroup(studentgroupresult, searchGroupInput.value),
+                orderByGroup.order,
+                orderByGroup.key
+              ) >= rowShow.value
+            "
+          >
             <mat-form-field style="max-width: 150px;">
               <mat-label>จำนวนแถว</mat-label>
               <mat-select #rowShow value="10">
@@ -129,6 +137,7 @@
               )
                 | paginate
                   : {
+                      id: 'pagiStudentGroup',
                       itemsPerPage: rowShow.value,
                       currentPage: pagiStudentGroup
                     };
@@ -169,11 +178,19 @@
         </tbody>
       </table>
     </div>
-    <div class="text-center" *ngIf="studentgroupresult">
+    <div class="text-center" *ngIf="studentgroupresult != null">
       <pagination-controls
+        id="pagiStudentGroup"
+        responsive="true"
         previousLabel="ย้อนกลับ"
-        nextLabel="ต่อไป"
-        *ngIf="studentgroupresult.length >= rowShow.value"
+        nextLabel="ถัดไป"
+        *ngIf="
+          sortArray(
+            searchGroup(studentgroupresult, searchGroupInput.value),
+            orderByGroup.order,
+            orderByGroup.key
+          ) >= rowShow.value
+        "
         (pageChange)="pagiStudentGroup = $event"
       ></pagination-controls>
     </div>
@@ -204,7 +221,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="enterPasswordGroupLabel">
-            เข้ากลุ่มเรียน {{ nameGroupForm }} {{ nameOwnerFrom }}
+            เข้ากลุ่มเรียน
           </h5>
           <button
             type="button"
@@ -216,6 +233,10 @@
           </button>
         </div>
         <div class="modal-body">
+          <div class="text-left mb-3">
+            <h6 class="mb-2">กลุ่มเรียน : {{ nameGroupForm }}</h6>
+            <h6>{{ nameOwnerFrom }}</h6>
+          </div>
           <mat-form-field>
             <input
               matInput

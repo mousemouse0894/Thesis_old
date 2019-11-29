@@ -1,3 +1,36 @@
-<div style="padding: 15px;">
-  <div><h5><b>จัดการคลังข้อสอบ</b></h5></div>
-</div>
+<ul class="nav">
+  <li class="nav-item" matRipple>
+    <a
+      class="nav-link"
+      [routerLink]="['/teacher/store/exam']"
+      routerLinkActive="nav-link-active"
+      >ชุดข้อสอบ</a
+    >
+  </li>
+  <li class="nav-item" matRipple>
+    <a
+      class="nav-link"
+      [routerLink]="['/teacher/store/unit']"
+      routerLinkActive="nav-link-active"
+      >หน่วยการเรียนรู้</a
+    >
+  </li>
+  <li class="nav-item" matRipple>
+    <a
+      class="nav-link"
+      [routerLink]="['/teacher/store/database-system']"
+      routerLinkActive="nav-link-active"
+      >ฐานข้อมูลในระบบ</a
+    >
+  </li>
+  <li class="nav-item" matRipple>
+    <a
+      class="nav-link"
+      [routerLink]="['/teacher/store/database-server']"
+      routerLinkActive="nav-link-active"
+      >ฐานข้อมูลในเซิร์ฟเวอร์</a
+    >
+  </li>
+</ul>
+
+<router-outlet></router-outlet>

@@ -30,7 +30,6 @@ export class ChangePasswordComponent implements OnInit {
     let formData = new FormData();
     Object.keys(data.value).forEach(key => {
       formData.append(`${key}`, data.value[key]);
-      console.log(`${key}`, data.value[key]);
     });
     if (data.value.password == data.value.password2) {
       let httpResponse: any = await this.http.post("password/update", formData);

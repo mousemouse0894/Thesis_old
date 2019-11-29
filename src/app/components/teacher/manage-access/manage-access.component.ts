@@ -26,6 +26,11 @@ export class ManageAccessComponent implements OnInit {
 
   ngOnInit() {}
 
+  public tableCheck = (id: string) => {
+    let listCheck: any = document.getElementById(`check_${id}`);
+    listCheck.checked = !listCheck.checked;
+  };
+
   public getAccessStudent = async () => {
     this.accessStudentrecord = null;
     let httpResponse: any = await this.http.get("token/showstudent");

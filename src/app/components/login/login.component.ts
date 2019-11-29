@@ -33,7 +33,6 @@ export class LoginComponent implements OnInit {
   public loginSSO = async () => {
     this.service.loadingState = true;
     let sso: any = await this.http.post("login/onSSO");
-    // console.log(sso.value);
     if (sso.connect) {
       if (sso.value.result == false && sso.value.message == "ไม่พบเซสชั่น") {
         this.localStorage.clear();
@@ -158,7 +157,6 @@ export class LoginComponent implements OnInit {
     let formData = new FormData();
     Object.keys(data.value).forEach(key => {
       formData.append(`${key}`, data.value[key]);
-      console.log(`${key}`, data.value[key]);
     });
 
     if (data.value.password == data.value.password2) {

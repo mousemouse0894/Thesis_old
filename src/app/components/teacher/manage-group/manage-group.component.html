@@ -139,7 +139,9 @@
               searchGroup(groupresult, searchGroupInput.value),
               orderByGroup.order,
               orderByGroup.key
-            ) | paginate: { itemsPerPage: rowShow.value, currentPage: p };
+            )
+              | paginate
+                : { id: 'p', itemsPerPage: rowShow.value, currentPage: p };
             let i = index
           "
         >
@@ -190,6 +192,10 @@
   </div>
   <div class="text-center" *ngIf="groupresult != null">
     <pagination-controls
+      id="p"
+      responsive="true"
+      previousLabel="ย้อนกลับ"
+      nextLabel="ถัดไป"
       *ngIf="
         sortArray(
           searchGroup(groupresult, searchGroupInput.value),
@@ -367,6 +373,7 @@
                     )
                       | paginate
                         : {
+                            id: 'pagiShowStudent',
                             itemsPerPage: rowShowStudent.value,
                             currentPage: pagiShowStudent
                           };
@@ -374,7 +381,9 @@
                   "
                 >
                   <td style="vertical-align: middle; min-width: 30px;">
-                    {{ i + 1 }}
+                    {{
+                      p * rowShowStudent.value - rowShowStudent.value + (i + 1)
+                    }}
                   </td>
                   <td style="vertical-align: middle; min-width: 150px;">
                     {{ x.studentId }}
@@ -401,6 +410,10 @@
           </div>
           <div class="text-center" *ngIf="studentInGroup != null">
             <pagination-controls
+              id="pagiShowStudent"
+              responsive="true"
+              previousLabel="ย้อนกลับ"
+              nextLabel="ถัดไป"
               *ngIf="
                 searchStudent(studentInGroup, searchStudentText.value).length >=
                 rowShowStudent.value
@@ -408,9 +421,6 @@
               (pageChange)="pagiShowStudent = $event"
             ></pagination-controls>
           </div>
-        </div>
-        <div *ngIf="studentInGroup == null">
-          <h5>กำลังโหลดอยู่...แป๊ปนึงนะจารย์</h5>
         </div>
         <div
           class="spinner-border text-primary"
@@ -438,7 +448,7 @@
   aria-labelledby="editGroupLabel"
   aria-hidden="true"
 >
-  <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-dialog" role="document">
     <div class="modal-content" *ngIf="formGroup">
       <form [formGroup]="formGroup" (ngSubmit)="submitEditGroup()">
         <div class="modal-header">
@@ -513,7 +523,7 @@
   aria-labelledby="createGroupLabel"
   aria-hidden="true"
 >
-  <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-dialog" role="document">
     <div class="modal-content" *ngIf="formGroup">
       <form [formGroup]="formGroup" (ngSubmit)="submitCreateGroup()">
         <div class="modal-header">

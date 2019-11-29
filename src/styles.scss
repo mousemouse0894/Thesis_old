@@ -54,10 +54,22 @@ mat-form-field {
   width: 100%;
   line-height: unset !important;
 }
+
 .cdk-overlay-container {
   z-index: 2000;
 }
+
 .ngx-pagination {
   margin: unset !important;
   padding: unset !important;
+}
+
+.mat-tab-group.mat-primary .mat-ink-bar,
+.mat-tab-nav-bar.mat-primary .mat-ink-bar {
+  background-color: #007bff !important;
+}
+
+.mat-tab-label-active {
+  color: #007bff !important;
+  font-weight: bolder;
 }

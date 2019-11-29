@@ -60,7 +60,7 @@ export class StudentGroupComponent implements OnInit {
       if (httpResponse.value.result == true) {
         this.studentgroupresult = httpResponse.value.data.result;
         this.groupOrder(this.orderByGroup.order, this.orderByGroup.key);
-        // console.log(this.studentgroupresult);
+
         this.messageGroup = httpResponse.value.message;
       } else {
         this.alert.alert("error", httpResponse.value.message);
@@ -79,7 +79,7 @@ export class StudentGroupComponent implements OnInit {
     this.IdGroupForm = gId;
     this.nameGroupForm = gName;
     this.groupOwnerFrom = owner;
-    this.nameOwnerFrom = prename + fname + lname;
+    this.nameOwnerFrom = prename + fname + " " + lname;
   };
   public enterPasswordGroup = async PasswordGroup => {
     this.formGroup = this.formBuilder.group({
@@ -91,7 +91,6 @@ export class StudentGroupComponent implements OnInit {
     let formData = new FormData();
     Object.keys(this.formGroup.value).forEach(key => {
       formData.append(`${key}`, this.formGroup.value[key]);
-      // console.log(`${key}`, this.formGroup.value[key]);
     });
     let httpResponse: any = await this.http.post(
       "group/submitstudent",

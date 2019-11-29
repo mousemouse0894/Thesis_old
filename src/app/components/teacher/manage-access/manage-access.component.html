@@ -74,7 +74,9 @@
               let x of searchStudent(
                 accessStudentrecord,
                 searchStudentInput.value
-              ) | paginate: { itemsPerPage: rowShow.value, currentPage: p };
+              )
+                | paginate
+                  : { id: 'p', itemsPerPage: rowShow.value, currentPage: p };
               let i = index
             "
           >
@@ -89,13 +91,22 @@
                 (change)="checkAllselect = false"
               />
             </th>
-            <th style="vertical-align: middle; min-width: 30px;">
+            <th
+              style="vertical-align: middle; min-width: 30px;"
+              (click)="tableCheck(x.username); checkAllselect = false"
+            >
               {{ p * rowShow.value - rowShow.value + (i + 1) }}
             </th>
-            <td style="vertical-align: middle; min-width: 120px;">
+            <td
+              style="vertical-align: middle; min-width: 120px;"
+              (click)="tableCheck(x.username); checkAllselect = false"
+            >
               {{ x.prename }}{{ x.fname }}&nbsp; {{ x.lname }}
             </td>
-            <td style="vertical-align: middle; min-width: 150px;">
+            <td
+              style="vertical-align: middle; min-width: 150px;"
+              (click)="tableCheck(x.username); checkAllselect = false"
+            >
               {{ x.ipaddress }}
             </td>
           </tr>
@@ -104,6 +115,10 @@
     </div>
     <div class="text-center" *ngIf="accessStudentrecord">
       <pagination-controls
+        id="p"
+        responsive="true"
+        previousLabel="ย้อนกลับ"
+        nextLabel="ถัดไป"
         *ngIf="accessStudentrecord.length >= rowShow.value"
         (pageChange)="p = $event"
       ></pagination-controls>

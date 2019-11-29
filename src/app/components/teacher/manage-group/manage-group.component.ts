@@ -109,12 +109,10 @@ export class ManageGroupComponent implements OnInit {
   };
 
   public submitCreateGroup = async () => {
-    // console.log(this.formGroup.value);
     this.service.loadingState = true;
     let formData = new FormData();
     Object.keys(this.formGroup.value).forEach(key => {
       formData.append(`${key}`, this.formGroup.value[key]);
-      // console.log(`${key}`, this.formGroup.value[key]);
     });
     let httpResponse: any = await this.http.post("group/creategroup", formData);
     if (httpResponse.connect) {
@@ -130,7 +128,6 @@ export class ManageGroupComponent implements OnInit {
         }
       }
     }
-    console.log(httpResponse);
     this.service.loadingState = false;
   };
 
@@ -139,7 +136,6 @@ export class ManageGroupComponent implements OnInit {
     let formData = new FormData();
     Object.keys(this.formGroup.value).forEach(key => {
       formData.append(`${key}`, this.formGroup.value[key]);
-      // console.log(`${key}`, this.formGroup.value[key]);
     });
     let httpResponse: any = await this.http.post("group/groupupdate", formData);
     if (httpResponse.connect) {
@@ -178,7 +174,6 @@ export class ManageGroupComponent implements OnInit {
       if (httpResponse.value.result == true) {
         this.studentInGroup = httpResponse.value.data.result;
         this.studentOrder(this.orderByStudent.order, this.orderByStudent.key);
-        // console.log(this.studentInGroup);
       } else {
         this.alert.alert("error", httpResponse.value.message);
       }

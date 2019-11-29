@@ -1,0 +1,27 @@
+.nav {
+  border-bottom: 1px solid #e0e0e0;
+  padding-top: 6px;
+  .nav-link {
+    color: #000;
+  }
+  .nav-item {
+    // min-width: 160px !important;
+    text-align: center;
+  }
+}
+
+.nav-link-active {
+  color: #007bff !important;
+  font-weight: bolder;
+  border-bottom: 3px solid #007bff;
+}
+
+@media only screen and (max-width: 576px) {
+  .nav {
+    flex-direction: column !important;
+    border-bottom: unset;
+    .nav-item {
+      border-bottom: 1px solid #e0e0e0;
+    }
+  }
+}

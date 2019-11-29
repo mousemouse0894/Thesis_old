@@ -1,0 +1,220 @@
+<div style="padding: 15px;">
+  <div class="row">
+    <div class="col-6 mb-3 text-left">
+      <h5><b>จัดการฐานข้อมูลในเซิร์ฟเวอร์</b></h5>
+    </div>
+    <div class="col-6 mb-3 text-right">
+      <button type="button" class="btn btn-primary btn-sm">
+        <i class="fas fa-plus"></i>&nbsp;เพิ่มฐานข้อมูล
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4">
+      <div>
+        <mat-form-field style="max-width: 150px;">
+          <mat-label>จำนวนแถว</mat-label>
+          <mat-select #rowShowDBServer value="10">
+            <mat-option value="10">
+              10
+            </mat-option>
+            <mat-option value="25">
+              25
+            </mat-option>
+            <mat-option value="50">
+              50
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-8">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="ค้นหาฐานข้อมูลจากเซิฟเวอร์"
+          #searchDBServerInput
+        />
+      </mat-form-field>
+    </div>
+  </div>
+  <div
+    class="spinner-border text-primary"
+    role="status"
+    *ngIf="getDatabseResult == null"
+  >
+    <span class="sr-only">Loading...</span>
+  </div>
+  <div *ngIf="getDatabseResult != null">
+    <div
+      class="text-center"
+      *ngIf="
+        searchDatabase(getDatabseResult, searchDBServerInput.value).length == 0
+      "
+    >
+      <h5>ไม่พบฐานข้อมูล</h5>
+    </div>
+    <div style="overflow: auto;">
+      <table
+        class="table table-sm table-borderless table-striped table-hover"
+        *ngIf="
+          searchDatabase(getDatabseResult, searchDBServerInput.value).length > 0
+        "
+      >
+        <thead>
+          <tr>
+            <th></th>
+            <th>
+              ชื่อฐานข้อมูล
+            </th>
+
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="
+              let x of searchDatabase(
+                getDatabseResult,
+                searchDBServerInput.value
+              )
+                | paginate
+                  : {
+                      id: 'pagiShowdatabase',
+                      itemsPerPage: rowShowDBServer.value,
+                      currentPage: pagiShowdatabase
+                    };
+              let i = index
+            "
+          >
+            <td style="vertical-align: middle; min-width: 30px;">
+              {{
+                pagiShowdatabase * rowShowDBServer.value -
+                  rowShowDBServer.value +
+                  (i + 1)
+              }}
+            </td>
+            <td style="vertical-align: middle; min-width: 200px;">
+              {{ x.Database }}
+            </td>
+            <td style="vertical-align: middle;  min-width: 200px;">
+              <span
+                style="margin-left: 5px; margin-right: 5px; display: inline-block;"
+              >
+                <button
+                  type="button"
+                  class="btn btn-primary btn-sm"
+                  data-toggle="modal"
+                  data-target="#showDatabase"
+                  (click)="getTable(x.Database)"
+                >
+                  <i class="fas fa-search"></i>&nbsp;ดูตาราง
+                </button>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div
+      class="text-center"
+      *ngIf="
+        searchDatabase(getDatabseResult, searchDBServerInput.value).length > 10
+      "
+    >
+      <pagination-controls
+        id="pagiShowdatabase"
+        responsive="true"
+        previousLabel="ย้อนกลับ"
+        nextLabel="ถัดไป"
+        (pageChange)="pagiShowdatabase = $event"
+      ></pagination-controls>
+    </div>
+  </div>
+</div>
+
+<!-- ดูตาราง -->
+<div
+  class="modal fade"
+  id="showDatabase"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="showDatabaseLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="showDatabaseLabel">ตาราง</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div
+          class="spinner-border text-primary"
+          role="status"
+          *ngIf="getTablet == null"
+        >
+          <span class="sr-only">Loading...</span>
+        </div>
+        <div *ngIf="getTablet != null">
+          <div style="overflow: auto;">
+            <table
+              class="table table-sm table-borderless table-striped table-hover"
+            >
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>
+                    ชื่อฐานข้อมูล
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let x of getTablet
+                      | paginate
+                        : {
+                            id: 'pagiShowTable',
+                            itemsPerPage: 10,
+                            currentPage: pagiShowTable
+                          };
+                    let i = index
+                  "
+                >
+                  <td style="vertical-align: middle; min-width: 30px;">
+                    {{ pagiShowTable * 10 - 10 + (i + 1) }}
+                  </td>
+                  <td style="vertical-align: middle; min-width: 200px;">
+                    {{ x.table_name }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="text-center">
+            <pagination-controls
+              id="pagiShowTable"
+              responsive="true"
+              previousLabel="ย้อนกลับ"
+              nextLabel="ถัดไป"
+              (pageChange)="pagiShowTable = $event"
+            ></pagination-controls>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+      </div> -->
+    </div>
+  </div>
+</div>

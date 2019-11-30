@@ -167,7 +167,7 @@ export class ManageGroupComponent implements OnInit {
     }
   };
 
-  public selectStudent = async (data: string, nameGroup: any) => {
+  public selectStudent = async (data: string, nameGroup: string) => {
     this.nameGroupStudent = nameGroup;
     console.log(nameGroup);
     this.selectStudentgroup = data;

@@ -1,7 +1,7 @@
 <div style="padding: 15px;">
   <div class="row">
     <div class="col-6 mb-3 text-left">
-      <h5><b>จักการหน่วยการเรียนรู้</b></h5>
+      <h5><b>จัดการหน่วยการเรียนรู้</b></h5>
     </div>
     <div class="col-6 mb-3 text-right">
       <button
@@ -74,8 +74,29 @@
           [attr.data-target]="'#collapseOne' + i"
           aria-expanded="false"
           [attr.aria-controls]="'collapseOne' + i"
+          (click)="getPurposeTable(x.id)"
         >
-          {{ x.name }}
+          <div class="float-left">
+            <span class="mt-1" style="display: inline-block;min-width: 300px;">
+              <b>หน่วยการเรียนรู้ : </b>{{ x.name }}
+            </span>
+            <span class="mt-1" style="display: inline-block;">
+              <b>คำอธิบาย : </b>{{ x.text }}
+            </span>
+          </div>
+          <div class="float-right">
+            <div>
+              <button
+                type="button"
+                class="btn btn-warning btn-sm text-dark"
+                data-toggle="modal"
+                data-target="#createUnit"
+                (click)="createFormUnit(false, x)"
+              >
+                แก้ไขหน่วยการเรียนรู้
+              </button>
+            </div>
+          </div>
         </div>
 
         <div
@@ -85,22 +106,103 @@
           data-parent="#accordionExampleUnit"
         >
           <div class="card-body">
-            <div class="row flex-column-reverse flex-md-row">
+            <div class="row">
               <div class="col-md-6 mb-3">
-                <h6><b>คำอธิบายหน่วยการเรียนรู้</b></h6>
-                {{ x.text }}
+                <h6 class="mb-2"><b>จุดประสงค์</b></h6>
               </div>
               <div class="col-md-6 mb-3">
                 <div class="text-right">
                   <button
                     type="button"
-                    class="btn btn-warning btn-sm text-dark"
+                    class="btn btn-primary btn-sm"
                     data-toggle="modal"
-                    data-target="#createUnit"
-                    (click)="createFormUnit(false, x)"
+                    data-target="#editPurpose"
+                    (click)="createFormPurpose(true, x)"
                   >
-                    แก้ไขหน่วยการเรียนรู้
+                    เพิ่มจุดประสงค์
                   </button>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div
+                class="spinner-border text-primary"
+                role="status"
+                *ngIf="getPurposeResult == null"
+              >
+                <span class="sr-only">Loading...</span>
+              </div>
+
+              <div *ngIf="getPurposeResult != null">
+                <div style="overflow: auto;">
+                  <table
+                    class="table table-sm table-borderless table-striped table-hover"
+                  >
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>
+                          ชื่อจุดประสงค์
+                        </th>
+                        <th>คำอธิบายจุดประสงค์</th>
+                        <th></th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        *ngFor="
+                          let g of getPurposeResult
+                            | paginate
+                              : {
+                                  id: 'pagiShowPurpose',
+                                  itemsPerPage: 10,
+                                  currentPage: pagiShowPurpose
+                                };
+                          let j = index
+                        "
+                      >
+                        <td style="vertical-align: middle; min-width: 30px;">
+                          {{ pagiShowPurpose * 10 - 10 + (j + 1) }}
+                        </td>
+                        <td style="vertical-align: middle; min-width: 200px;">
+                          {{ g.name }}
+                        </td>
+                        <td style="vertical-align: middle; min-width: 200px;">
+                          {{ g.text }}
+                        </td>
+                        <td style="vertical-align: middle; min-width: 200px;">
+                          <button
+                            type="button"
+                            class="btn btn-warning btn-sm"
+                            data-toggle="modal"
+                            data-target="#editPurpose"
+                            (click)="createFormPurpose(false, g)"
+                          >
+                            เเก้ไขจุดประสงค์
+                          </button>
+                        </td>
+                        <td style="vertical-align: middle; min-width: 200px;">
+                          <button
+                            type="button"
+                            class="btn btn-danger btn-sm"
+                            (click)="onDeletePurpose(g.id)"
+                          >
+                            ลบจุดประสงค์
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="text-center" *ngIf="getPurposeResult.length > 10">
+                  <pagination-controls
+                    id="pagiShowPurpose"
+                    responsive="true"
+                    previousLabel="ย้อนกลับ"
+                    nextLabel="ถัดไป"
+                    (pageChange)="pagiShowPurpose = $event"
+                  ></pagination-controls>
                 </div>
               </div>
             </div>
@@ -260,26 +362,57 @@
   >
     <div class="modal-dialog" role="document">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="editPurposeLabel">เพิ่มจุดประสงค์</h5>
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          ...
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">
-            Close
-          </button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
+        <form [formGroup]="formPurpose" (ngSubmit)="submitFormPurpose()">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editPurposeLabel">
+              {{ stateFormPurpose ? "เพิ่มจุดประสงค์" : "แก้ไขจุดประสงค์" }}
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div>
+              <mat-form-field>
+                <input
+                  matInput
+                  placeholder="ชื่อจุดประสงค์"
+                  formControlName="name"
+                />
+              </mat-form-field>
+            </div>
+            <div>
+              <mat-form-field>
+                <input
+                  matInput
+                  placeholder="คำอธิบายจุดประสงค์"
+                  formControlName="text"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              ปิด
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="formPurpose.invalid"
+            >
+              บันทึก
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

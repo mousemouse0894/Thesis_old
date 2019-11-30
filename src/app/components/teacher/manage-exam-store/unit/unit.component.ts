@@ -12,10 +12,15 @@ import { AppService } from "src/app/services/app.service";
 })
 export class UnitComponent implements OnInit {
   public getUnittableResult: any = null;
+  public getPurposeResult: any = null;
   public stateFormUnit: boolean = false;
+  public stateFormPurpose: boolean = false;
   public _windows: any = window;
   public formUnit: FormGroup;
+  public formPurpose: FormGroup;
   public pagiShowUnit: number = 1;
+  public pagiShowPurpose: number = 1;
+  public selectUnitId: any = null;
   constructor(
     private alert: AlertService,
     private http: HttpService,
@@ -30,8 +35,29 @@ export class UnitComponent implements OnInit {
       text: ["", Validators.required],
       owner: [this.localStorage.get("userlogin")["username"]]
     });
+
+    this.formPurpose = this.formBuilder.group({
+      parent: ["", Validators.required],
+      name: ["", Validators.required],
+      text: ["", Validators.required],
+      owner: [this.localStorage.get("userlogin")["username"]]
+    });
+
     this.getUnitTable();
   }
+
+  public searchUnit = (array: any, searchString: string) => {
+    if (searchString.length > 0) {
+      return Array.from(
+        new Set([
+          ...array.filter(value => value.name.indexOf(searchString) > -1),
+          ...array.filter(value => value.text.indexOf(searchString) > -1)
+        ])
+      );
+    } else {
+      return array;
+    }
+  };
 
   public onDeleteUnit = () => {
     let dataDelete = {
@@ -152,16 +178,124 @@ export class UnitComponent implements OnInit {
     }
   };
 
-  public searchUnit = (array: any, searchString: string) => {
-    if (searchString.length > 0) {
-      return Array.from(
-        new Set([
-          ...array.filter(value => value.name.indexOf(searchString) > -1),
-          ...array.filter(value => value.text.indexOf(searchString) > -1)
-        ])
-      );
+  public createFormPurpose = (state: boolean, value: any = null) => {
+    if (state == true) {
+      // Insert
+      this.formPurpose = this.formBuilder.group({
+        parent: [value.id, Validators.required],
+        name: ["", Validators.required],
+        text: ["", Validators.required],
+        owner: [this.localStorage.get("userlogin")["username"]]
+      });
     } else {
-      return array;
+      // Update
+      this.formPurpose = this.formBuilder.group({
+        parent: [value.id, Validators.required],
+        name: [value.name, Validators.required],
+        text: [value.text, Validators.required],
+        owner: [this.localStorage.get("userlogin")["username"]]
+      });
     }
+    this.stateFormPurpose = state;
+  };
+
+  public submitFormPurpose = async () => {
+    this.getPurposeResult = null;
+    if (this.stateFormPurpose == true) {
+      // Insert
+      this.service.loadingState = true;
+      let formData = new FormData();
+      Object.keys(this.formPurpose.value).forEach(key => {
+        formData.append(`${key}`, this.formPurpose.value[key]);
+      });
+      let httpResponse: any = await this.http.post(
+        "manageExam/insertpurpose",
+        formData
+      );
+      if (httpResponse.connect) {
+        if (httpResponse.value.result == true) {
+          this.getPurposeTable(this.selectUnitId);
+          this._windows.$("#editPurpose").modal("hide");
+          this.alert.alert("success", "เพิ่มจุดประสงค์สำเร็จ");
+        } else {
+          this.alert.alert("error", httpResponse.value.message);
+        }
+      }
+
+      this.service.loadingState = false;
+    } else {
+      // Update
+      this.service.loadingState = true;
+      let formData = new FormData();
+      Object.keys(this.formPurpose.value).forEach(key => {
+        formData.append(`${key}`, this.formPurpose.value[key]);
+      });
+      let httpResponse: any = await this.http.post(
+        "manageExam/updatepurpose",
+        formData
+      );
+      if (httpResponse.connect) {
+        if (httpResponse.value.result == true) {
+          this.getPurposeTable(this.selectUnitId);
+          this._windows.$("#editPurpose").modal("hide");
+          this.alert.alert("success", "เเก้ไขจุดประสงค์สำเร็จ");
+        } else {
+          this.alert.alert("error", httpResponse.value.message);
+        }
+      }
+
+      this.service.loadingState = false;
+    }
+  };
+
+  public getPurposeTable = async (unitId: any) => {
+    this.getPurposeResult = null;
+    this.selectUnitId = unitId;
+    let httpResponse: any = await this.http.get(
+      "manageExam/showpurpose/" +
+        this.localStorage.get("userlogin")["username"] +
+        "/" +
+        this.selectUnitId
+    );
+    if (httpResponse.connect) {
+      if (httpResponse.value.result == true) {
+        this.getPurposeResult = httpResponse.value.data.result;
+      } else {
+        this.alert.alert("error", httpResponse.value.message);
+      }
+    }
+  };
+
+  public onDeletePurpose = (Purposeid: any) => {
+    let dataDelete2 = {
+      id: Purposeid,
+      owner: this.localStorage.get("userlogin")["username"]
+    };
+    this.alert
+      .confirmAlert("ยืนยันการลบจุประสงค์")
+      .then(async (value: boolean) => {
+        if (value) {
+          this.getPurposeResult = null;
+          this.service.loadingState = true;
+          let formData = new FormData();
+          Object.keys(dataDelete2).forEach(key => {
+            formData.append(`${key}`, dataDelete2[key]);
+          });
+          let httpResponse: any = await this.http.post(
+            "manageExam/delpurpose",
+            formData
+          );
+          if (httpResponse.connect) {
+            if (httpResponse.value.result == true) {
+              this.getPurposeTable(this.selectUnitId);
+              this.alert.alert("success", "ลบจุดประสงค์สำเร็จ");
+            } else {
+              this.alert.alert("error", httpResponse.value.message);
+            }
+          }
+
+          this.service.loadingState = false;
+        }
+      });
   };
 }

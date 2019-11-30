@@ -15,7 +15,9 @@ export class DatabaseServerComponent implements OnInit {
   public getTablet: any = null;
   public pagiShowdatabase: number = 1;
   public pagiShowTable: number = 1;
-
+  public resultTable: any = null;
+  public nameTable: any = null;
+  public pagiShowdatabaseResult: number = 1;
   constructor(
     private alert: AlertService,
     private http: HttpService,
@@ -56,10 +58,35 @@ export class DatabaseServerComponent implements OnInit {
     if (httpResponse.connect) {
       if (httpResponse.value.result == true) {
         this.getTablet = httpResponse.value.data.result;
-        console.log(this.getTablet);
       } else {
         this.alert.alert("error", httpResponse.value.message);
       }
+    }
+  };
+
+  public getResultTable = async (database, table) => {
+    this.resultTable = null;
+    this.nameTable = table;
+    let httpResponse: any = await this.http.get(
+      `manageExam/showtabledata/${database}/${table}`
+    );
+    if (httpResponse.connect) {
+      if (httpResponse.value.result == true) {
+        this.resultTable = httpResponse.value.data.result;
+      } else {
+        this.alert.alert("error", httpResponse.value.message);
+      }
+    }
+  };
+
+  public getKeyObject = array => {
+    if (array.length > 0) {
+      let ObjectData = [...array];
+      return Object.keys(ObjectData[0]);
+    } else if (typeof array == "object") {
+      return Object.keys(array);
+    } else {
+      return [];
     }
   };
 }

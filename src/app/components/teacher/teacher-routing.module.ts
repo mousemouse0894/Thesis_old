@@ -1,5 +1,4 @@
 import { DatabaseServerComponent } from "./manage-exam-store/database-server/database-server.component";
-import { DatabaseComponent } from "./manage-exam-store/database/database.component";
 import { UnitComponent } from "./manage-exam-store/unit/unit.component";
 import { ExamComponent } from "./manage-exam-store/exam/exam.component";
 import { ManageAccessComponent } from "./manage-access/manage-access.component";
@@ -21,7 +20,6 @@ const routes: Routes = [
         children: [
           { path: "exam", component: ExamComponent },
           { path: "unit", component: UnitComponent },
-          { path: "database-system", component: DatabaseComponent },
           { path: "database-server", component: DatabaseServerComponent },
           { path: "", redirectTo: "/teacher/store/exam", pathMatch: "full" }
         ]

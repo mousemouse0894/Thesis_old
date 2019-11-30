@@ -18,6 +18,7 @@ export class ManageGroupComponent implements OnInit {
   public pagiShowStudent: number = 1;
   public _windows: any = window;
   public selectStudentgroup: any = null;
+  public nameGroupStudent: any = null;
   public orderByGroup = {
     order: "asc",
     key: "gName"
@@ -73,7 +74,7 @@ export class ManageGroupComponent implements OnInit {
         );
         if (httpResponse.connect) {
           if (httpResponse.value.result == true) {
-            this.selectStudent(this.selectStudentgroup);
+            this.selectStudent(this.selectStudentgroup, null);
             this.alert.alert("success", "ลบข้อมูลสำเร็จ");
           } else {
             this.alert.alert("error", httpResponse.value.message);
@@ -166,7 +167,9 @@ export class ManageGroupComponent implements OnInit {
     }
   };
 
-  public selectStudent = async (data: string) => {
+  public selectStudent = async (data: string, nameGroup: any) => {
+    this.nameGroupStudent = nameGroup;
+    console.log(nameGroup);
     this.selectStudentgroup = data;
     this.studentInGroup = null;
     let httpResponse: any = await this.http.get("group/showstudent/" + data);

@@ -1,1 +1,286 @@
-<p>unit works!</p>
+<div style="padding: 15px;">
+  <div class="row">
+    <div class="col-6 mb-3 text-left">
+      <h5><b>จักการหน่วยการเรียนรู้</b></h5>
+    </div>
+    <div class="col-6 mb-3 text-right">
+      <button
+        type="button"
+        class="btn btn-primary btn-sm"
+        data-toggle="modal"
+        data-target="#createUnit"
+        (click)="createFormUnit(true)"
+      >
+        เพิ่มหน่วยการเรียนรู้
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4">
+      <div>
+        <mat-form-field style="max-width: 150px;">
+          <mat-label>จำนวนแถว</mat-label>
+          <mat-select #rowShowUnit value="10">
+            <mat-option value="10">
+              10
+            </mat-option>
+            <mat-option value="25">
+              25
+            </mat-option>
+            <mat-option value="50">
+              50
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-8">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="ค้นหาหน่วยการเรียนรู้"
+          #searchDBServerInput
+        />
+      </mat-form-field>
+    </div>
+  </div>
+  <div
+    class="spinner-border text-primary"
+    role="status"
+    *ngIf="getUnittableResult == null"
+  >
+    <span class="sr-only">Loading...</span>
+  </div>
+
+  <div style="overflow: auto;" *ngIf="getUnittableResult != null">
+    <div class="accordion" id="accordionExampleUnit">
+      <div
+        class="card border"
+        *ngFor="
+          let x of searchUnit(getUnittableResult, searchDBServerInput.value)
+            | paginate
+              : {
+                  id: 'pagiShowUnit',
+                  itemsPerPage: rowShowUnit.value,
+                  currentPage: pagiShowUnit
+                };
+          let i = index
+        "
+      >
+        <div
+          class="card-header"
+          id="headingOne{{ i }}"
+          data-toggle="collapse"
+          [attr.data-target]="'#collapseOne' + i"
+          aria-expanded="false"
+          [attr.aria-controls]="'collapseOne' + i"
+        >
+          {{ x.name }}
+        </div>
+
+        <div
+          id="collapseOne{{ i }}"
+          class="collapse"
+          [attr.aria-labelledby]="'headingOne' + i"
+          data-parent="#accordionExampleUnit"
+        >
+          <div class="card-body">
+            <div class="row flex-column-reverse flex-md-row">
+              <div class="col-md-6 mb-3">
+                <h6><b>คำอธิบายหน่วยการเรียนรู้</b></h6>
+                {{ x.text }}
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="text-right">
+                  <button
+                    type="button"
+                    class="btn btn-warning btn-sm text-dark"
+                    data-toggle="modal"
+                    data-target="#createUnit"
+                    (click)="createFormUnit(false, x)"
+                  >
+                    แก้ไขหน่วยการเรียนรู้
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br />
+      <div class="text-center" *ngIf="getUnittableResult.length > 10">
+        <pagination-controls
+          id="pagiShowUnit"
+          responsive="true"
+          previousLabel="ย้อนกลับ"
+          nextLabel="ถัดไป"
+          (pageChange)="pagiShowUnit = $event"
+        ></pagination-controls>
+      </div>
+
+      <!-- <table class="table table-sm table-borderless table-striped table-hover">
+      <thead>
+        <tr>
+          <th></th>
+          <th>
+            ชื่อหน่วยการเรียนรู้
+          </th>
+          <th>
+            คำอธิบายหน่วยการเรียนรู้
+          </th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let x of getUnittableResult; let i = index">
+          <th style="vertical-align: middle; min-width: 30px;">{{ i + 1 }}</th>
+          <td style="vertical-align: middle; min-width: 120px;">
+            {{ x.name }}
+          </td>
+          <td style="vertical-align: middle; min-width: 150px;">
+            {{ x.text }}
+          </td>
+
+          <td style="vertical-align: middle; min-width: 120px;">
+            <button
+              type="button"
+              class="btn btn-primary btn-sm"
+              data-toggle="modal"
+              data-target="#editPurpose"
+            >
+              จัดการจุดประสงค์
+            </button>
+          </td>
+          <td style="vertical-align: middle; min-width: 120px;">
+            <button
+              type="button"
+              class="btn btn-warning btn-sm"
+              data-toggle="modal"
+              data-target="#createUnit"
+              (click)="createFormUnit(false)"
+            >
+              แก้ไขหน่วยการเรียนรู้
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table> -->
+    </div>
+  </div>
+
+  <!-- เพิ่มหน่วยการเรียนรู้ -->
+  <div
+    class="modal fade"
+    id="createUnit"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="createUnitLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form [formGroup]="formUnit" (ngSubmit)="submitFormUnit()">
+          <div class="modal-header">
+            <h5 class="modal-title" id="createUnitLabel">
+              {{
+                stateFormUnit
+                  ? "เพิ่มหน่วยการเรียนรู้"
+                  : "แก้ไขหน่วยการเรียนรู้"
+              }}
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="text-right" *ngIf="stateFormUnit == false">
+              <button
+                type="button"
+                class="btn btn-danger btn-sm"
+                (click)="onDeleteUnit()"
+              >
+                ลบหน่วยการเรียนรู้
+              </button>
+            </div>
+
+            <div>
+              <mat-form-field>
+                <input
+                  matInput
+                  placeholder="ชื่อหน่วยการเรียนรู้"
+                  formControlName="name"
+                />
+              </mat-form-field>
+            </div>
+            <div>
+              <mat-form-field>
+                <input
+                  matInput
+                  placeholder="คำอธิบายหน่วยการเรียนรู้"
+                  formControlName="text"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              ปิด
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="formUnit.invalid"
+            >
+              บันทึก
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- เพิ่มจุดประสงค์ -->
+  <div
+    class="modal fade"
+    id="editPurpose"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="editPurposeLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editPurposeLabel">เพิ่มจุดประสงค์</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Close
+          </button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

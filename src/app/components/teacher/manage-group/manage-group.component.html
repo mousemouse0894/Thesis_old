@@ -12,8 +12,7 @@
         (click)="openCreateGroup()"
         [disabled]="groupresult == null"
       >
-        <i class="fa fa-plus-circle" aria-hidden="true"></i
-        >&nbsp;เพิ่มกลุ่มเรียน
+        เพิ่มกลุ่มเรียน
       </button>
     </div>
   </div>
@@ -167,7 +166,7 @@
               class="btn btn-primary btn-sm"
               data-toggle="modal"
               data-target="#manageStudent"
-              (click)="selectStudent(x.gId)"
+              (click)="selectStudent(x.gId, x.gName)"
             >
               จัดการนักศึกษา
             </button>
@@ -183,8 +182,9 @@
                 data-target="#editGroup"
                 (click)="openEditGroup(x.gName, x.gPw, x.gStatus, x.gId)"
               >
-                <i class="fas fa-edit"></i></button
-            ></span>
+                แก้ไขกลุ่มเรียน
+              </button></span
+            >
           </td>
         </tr>
       </tbody>
@@ -231,6 +231,10 @@
         </button>
       </div>
       <div class="modal-body">
+        <div>
+          <b>กลุ่มเรียน:&nbsp;{{ nameGroupStudent }}</b>
+        </div>
+
         <div class="row">
           <div class="col-4">
             <div>
@@ -397,10 +401,10 @@
                     >
                       <button
                         type="button"
-                        class="btn btn-danger"
+                        class="btn btn-danger btn-sm"
                         (click)="deleteStudent(x.username)"
                       >
-                        <i class="fas fa-trash-alt"></i>
+                        ลบออกจากกลุ่ม
                       </button>
                     </span>
                   </td>

@@ -32,8 +32,9 @@
       <mat-form-field>
         <input
           matInput
-          placeholder="ค้นหาฐานข้อมูลในเซิฟเวอร์"
+          placeholder="ค้นหาฐานข้อมูลในเซิร์ฟเวอร์"
           #searchDBServerInput
+          (keydown)="pagiShowdatabase = 1"
         />
       </mat-form-field>
     </div>
@@ -72,16 +73,25 @@
         let i = index
       "
     >
-      <div
-        class="card-header"
-        id="headingOne{{ i }}"
-        data-toggle="collapse"
-        [attr.data-target]="'#collapseOne' + i"
-        aria-expanded="true"
-        [attr.aria-controls]="'collapseOne' + i"
-        (click)="getTable(x.Database); pagiShowTable = 1"
-      >
-        {{ x.Database }}
+      <div class="card-header" id="headingOne{{ i }}">
+        <div class="float-left">
+          <span style="display: inline-block;min-width: 250px;">
+            <b>ชื่อฐานข้อมูล : </b>{{ x.Database }}
+          </span>
+        </div>
+        <div class="float-right">
+          <button
+            type="button"
+            class="btn btn-link btn-sm"
+            data-toggle="collapse"
+            [attr.data-target]="'#collapseOne' + i"
+            aria-expanded="true"
+            [attr.aria-controls]="'collapseOne' + i"
+            (click)="getTable(x.Database); pagiShowTable = 1"
+          >
+            แสดงข้อมูล
+          </button>
+        </div>
       </div>
 
       <div
@@ -99,7 +109,10 @@
             <span class="sr-only">Loading...</span>
           </div>
           <div *ngIf="getTablet != null">
-            <div style="overflow: auto;">
+            <div *ngIf="getTablet.length <= 0" class="text-center">
+              <h5>ไม่พบตาราง</h5>
+            </div>
+            <div style="overflow: auto;" *ngIf="getTablet.length > 0">
               <table
                 class="table table-sm table-borderless table-striped table-hover"
               >
@@ -148,6 +161,7 @@
             </div>
             <div class="text-center">
               <pagination-controls
+                *ngIf="getTablet.length > 10"
                 id="pagiShowTable{{ i }}"
                 responsive="true"
                 previousLabel="ย้อนกลับ"

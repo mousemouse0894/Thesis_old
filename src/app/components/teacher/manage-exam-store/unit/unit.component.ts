@@ -4,6 +4,7 @@ import { HttpService } from "src/app/services/http.service";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { LocalstorageService } from "src/app/services/localstorage.service";
 import { AppService } from "src/app/services/app.service";
+import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 
 @Component({
   selector: "app-unit",
@@ -28,6 +29,14 @@ export class UnitComponent implements OnInit {
     public localStorage: LocalstorageService,
     public service: AppService
   ) {}
+
+  drop(event: CdkDragDrop<any[]>) {
+    moveItemInArray(
+      this.getPurposeResult,
+      event.previousIndex,
+      event.currentIndex
+    );
+  }
 
   ngOnInit() {
     this.formUnit = this.formBuilder.group({
@@ -272,7 +281,7 @@ export class UnitComponent implements OnInit {
       owner: this.localStorage.get("userlogin")["username"]
     };
     this.alert
-      .confirmAlert("ยืนยันการลบจุประสงค์")
+      .confirmAlert("ยืนยันการลบจุดประสงค์")
       .then(async (value: boolean) => {
         if (value) {
           this.getPurposeResult = null;

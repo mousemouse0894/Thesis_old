@@ -42,7 +42,12 @@
     </div>
     <div class="col-8">
       <mat-form-field>
-        <input matInput placeholder="ค้นหากลุ่มเรียน" #searchGroupInput />
+        <input
+          matInput
+          placeholder="ค้นหากลุ่มเรียน"
+          #searchGroupInput
+          (keydown)="p = 1"
+        />
       </mat-form-field>
     </div>
   </div>
@@ -53,128 +58,150 @@
   >
     <span class="sr-only">Loading...</span>
   </div>
-  <div style="overflow: auto; " *ngIf="groupresult != null">
-    <table class="table table-sm table-borderless table-striped table-hover">
-      <thead>
-        <tr>
-          <th></th>
-          <th
-            (click)="
-              groupOrder(
-                orderByGroup.key == 'gName'
-                  ? orderByGroup.order == 'asc'
-                    ? 'desc'
-                    : 'asc'
-                  : 'asc',
-                'gName'
-              )
-            "
-            style="cursor: pointer;"
-          >
-            ชื่อกลุ่มเรียน<span
-              style="display:inline-block; padding-left: 5px;"
-              [ngStyle]="{
-                color:
-                  orderByGroup.order == 'asc' && orderByGroup.key == 'gName'
-                    ? '#007bff'
-                    : '#b0b0b0'
-              }"
-              ><i class="fas fa-arrow-up fa-sm"></i
-            ></span>
-            <span
-              style="display:inline-block; padding-left: 3px;"
-              [ngStyle]="{
-                color:
-                  orderByGroup.order == 'desc' && orderByGroup.key == 'gName'
-                    ? '#007bff'
-                    : '#b0b0b0'
-              }"
-              ><i class="fas fa-arrow-down fa-sm"></i
-            ></span>
-          </th>
-          <th>รหัสผ่านกลุ่มเรียน</th>
-          <th
-            (click)="
-              groupOrder(
-                orderByGroup.key == 'gStatus'
-                  ? orderByGroup.order == 'asc'
-                    ? 'desc'
-                    : 'asc'
-                  : 'asc',
-                'gStatus'
-              )
-            "
-            style="cursor: pointer;"
-          >
-            สถานะกลุ่ม<span
-              style="display:inline-block; padding-left: 5px;"
-              [ngStyle]="{
-                color:
-                  orderByGroup.order == 'asc' && orderByGroup.key == 'gStatus'
-                    ? '#007bff'
-                    : '#b0b0b0'
-              }"
-              ><i class="fas fa-arrow-up fa-sm"></i
-            ></span>
-            <span
-              style="display:inline-block; padding-left: 3px;"
-              [ngStyle]="{
-                color:
-                  orderByGroup.order == 'desc' && orderByGroup.key == 'gStatus'
-                    ? '#007bff'
-                    : '#b0b0b0'
-              }"
-              ><i class="fas fa-arrow-down fa-sm"></i
-            ></span>
-          </th>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          *ngFor="
-            let x of sortArray(
-              searchGroup(groupresult, searchGroupInput.value),
-              orderByGroup.order,
-              orderByGroup.key
-            )
-              | paginate
-                : { id: 'p', itemsPerPage: rowShow.value, currentPage: p };
-            let i = index
-          "
-        >
-          <th style="vertical-align: middle; min-width: 30px;">
-            {{ p * rowShow.value - rowShow.value + (i + 1) }}
-          </th>
-          <td style="vertical-align: middle; min-width: 140px;">
-            {{ x.gName }}
-          </td>
-          <td style="vertical-align: middle; min-width: 150px;">{{ x.gPw }}</td>
-          <td
-            style="vertical-align: middle; min-width: 120px;"
-            [ngClass]="{
-              'text-success': x.gStatus == 'เปิด',
-              'text-danger font-weight-bold': x.gStatus == 'ปิด'
-            }"
-          >
-            {{ x.gStatus }}
-          </td>
-          <td style="vertical-align: middle; min-width: 120px;">
-            <button
-              type="button"
-              class="btn btn-primary btn-sm"
-              data-toggle="modal"
-              data-target="#manageStudent"
-              (click)="selectStudent(x.gId, x.gName)"
+  <div *ngIf="groupresult != null">
+    <div
+      class="text-center"
+      *ngIf="
+        sortArray(
+          searchGroup(groupresult, searchGroupInput.value),
+          orderByGroup.order,
+          orderByGroup.key
+        ).length <= 0
+      "
+    >
+      <h5>ไม่พบกลุ่มเรียน</h5>
+    </div>
+    <div
+      style="overflow: auto;"
+      *ngIf="
+        sortArray(
+          searchGroup(groupresult, searchGroupInput.value),
+          orderByGroup.order,
+          orderByGroup.key
+        ).length > 0
+      "
+    >
+      <table class="table table-sm table-borderless table-striped table-hover">
+        <thead>
+          <tr>
+            <th></th>
+            <th
+              (click)="
+                groupOrder(
+                  orderByGroup.key == 'gName'
+                    ? orderByGroup.order == 'asc'
+                      ? 'desc'
+                      : 'asc'
+                    : 'asc',
+                  'gName'
+                )
+              "
+              style="cursor: pointer;"
             >
-              จัดการนักศึกษา
-            </button>
-          </td>
-          <td style="vertical-align: middle; min-width: 50px;">
-            <span
-              style="margin-left: 5px; margin-right: 5px; display: inline-block;"
+              ชื่อกลุ่มเรียน<span
+                style="display:inline-block; padding-left: 5px;"
+                [ngStyle]="{
+                  color:
+                    orderByGroup.order == 'asc' && orderByGroup.key == 'gName'
+                      ? '#007bff'
+                      : '#b0b0b0'
+                }"
+                ><i class="fas fa-arrow-up fa-sm"></i
+              ></span>
+              <span
+                style="display:inline-block; padding-left: 3px;"
+                [ngStyle]="{
+                  color:
+                    orderByGroup.order == 'desc' && orderByGroup.key == 'gName'
+                      ? '#007bff'
+                      : '#b0b0b0'
+                }"
+                ><i class="fas fa-arrow-down fa-sm"></i
+              ></span>
+            </th>
+            <th>รหัสผ่านกลุ่มเรียน</th>
+            <th
+              (click)="
+                groupOrder(
+                  orderByGroup.key == 'gStatus'
+                    ? orderByGroup.order == 'asc'
+                      ? 'desc'
+                      : 'asc'
+                    : 'asc',
+                  'gStatus'
+                )
+              "
+              style="cursor: pointer;"
             >
+              สถานะกลุ่ม<span
+                style="display:inline-block; padding-left: 5px;"
+                [ngStyle]="{
+                  color:
+                    orderByGroup.order == 'asc' && orderByGroup.key == 'gStatus'
+                      ? '#007bff'
+                      : '#b0b0b0'
+                }"
+                ><i class="fas fa-arrow-up fa-sm"></i
+              ></span>
+              <span
+                style="display:inline-block; padding-left: 3px;"
+                [ngStyle]="{
+                  color:
+                    orderByGroup.order == 'desc' &&
+                    orderByGroup.key == 'gStatus'
+                      ? '#007bff'
+                      : '#b0b0b0'
+                }"
+                ><i class="fas fa-arrow-down fa-sm"></i
+              ></span>
+            </th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="
+              let x of sortArray(
+                searchGroup(groupresult, searchGroupInput.value),
+                orderByGroup.order,
+                orderByGroup.key
+              )
+                | paginate
+                  : { id: 'p', itemsPerPage: rowShow.value, currentPage: p };
+              let i = index
+            "
+          >
+            <th style="vertical-align: middle; min-width: 30px;">
+              {{ p * rowShow.value - rowShow.value + (i + 1) }}
+            </th>
+            <td style="vertical-align: middle; min-width: 140px;">
+              {{ x.gName }}
+            </td>
+            <td style="vertical-align: middle; min-width: 150px;">
+              {{ x.gPw }}
+            </td>
+            <td
+              style="vertical-align: middle; min-width: 120px;"
+              [ngClass]="{
+                'text-success': x.gStatus == 'เปิด',
+                'text-danger font-weight-bold': x.gStatus == 'ปิด'
+              }"
+            >
+              {{ x.gStatus }}
+            </td>
+            <td style="vertical-align: middle; min-width: 120px;">
+              <button
+                type="button"
+                class="btn btn-primary btn-sm"
+                data-toggle="modal"
+                data-target="#manageStudent"
+                (click)="selectStudent(x.gId, x.gName)"
+              >
+                จัดการนักศึกษา
+              </button>
+            </td>
+            <td style="vertical-align: middle; min-width: 120px;">
               <button
                 type="button"
                 class="btn btn-warning btn-sm"
@@ -183,12 +210,12 @@
                 (click)="openEditGroup(x.gName, x.gPw, x.gStatus, x.gId)"
               >
                 แก้ไขกลุ่มเรียน
-              </button></span
-            >
-          </td>
-        </tr>
-      </tbody>
-    </table>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
   <div class="text-center" *ngIf="groupresult != null">
     <pagination-controls
@@ -274,7 +301,12 @@
             "
           >
             <mat-form-field>
-              <input matInput placeholder="ค้นหานักศึกษา" #searchStudentText />
+              <input
+                matInput
+                placeholder="ค้นหานักศึกษา"
+                #searchStudentText
+                (keydown)="pagiShowStudent = 1"
+              />
             </mat-form-field>
           </div>
         </div>
